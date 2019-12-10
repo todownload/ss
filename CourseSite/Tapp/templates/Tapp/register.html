@@ -1,0 +1,27 @@
+<head>
+    <title>注册</title>
+</head>
+<body>
+    <p><a href="{% url 'Tapp:login' %}">去登陆</a></p>
+    <form action="{% url 'Tapp:midRegister' %}">
+        {% csrf_token %}
+        <fieldset>
+            <label for="usr_count">名字</label>
+            <input type="text" maxlength="30" id="usr_name" name="usr_name" required>
+        </fieldset>
+        <fieldset>
+                <label for="usr_count">ID</label>
+                <input type="text" maxlength="30" id="usr_id" name="usr_id" required>
+            </fieldset>
+        <fieldset>
+            <label for="usr_pwd">密码</label>
+            <input maxlength="30" id="usr_pwd" name='usr_pwd' type="password" required>
+        </fieldset>
+        <fieldset>
+            <label for="">确认密码</label>
+            <input maxlength="30" id="usr_cof" name="usr_cof" type="password" required>
+        </fieldset>
+        <button id="submit" >注册</button>
+    </form>
+</body>
+<footer><small>&COPY;Copyright All about LHK</small></footer>
