@@ -53,7 +53,9 @@ class CoursesView(generic.ListView):
     # def http_method_not_allowed(self, request):
     #     return HttpResponseNotAllowed(permitted_methods="POST GET")
 
-
+@require_POST
+def allCourse(request):
+    return CoursesView.as_view()
 
 # def courses(request): # 课程索引
 #     try:
@@ -69,10 +71,36 @@ class CoursesView(generic.ListView):
 #         context = {"all_courses":all_courses} # 创建上下文对象
 #         return render(request,"Tapp/courses.html",context) # 渲染模板
 
+class UserDetailView(generic.DetailView):
+    model = Student
+    template_name = 'Tapp/userInfo.html'
+    contest_object_name = 'usr'
+
+
+
 class CourseDetailView(generic.DetailView): # 接受名为pk的参数 查找相应对象 会返回HTTP404
     model = Course
     template_name = "Tapp/course_detail.html"
     contest_object_name = "course"
+
+
+
+class SelectDetailView(generic.DetailView):
+    model = SelectQuestion
+    template_name = "Tapp/selectDetail.html"
+    contest_object_name = 'select'
+    pass
+
+class DrawDetailView(generic.DetailView):
+    model = DrawQuestion
+    template_name = 'Tapp/drawDetail.html'
+    contest_object_name = 'draw'
+
+class DesignDetailView(generic.DetailView):
+    model = DesignQuestion
+    template_name = 'Tapp/designDetail.html'
+    contest_object_name = 'design'
+
 
 
 # def course_detail(request,c_id): # 依主码来找
