@@ -76,14 +76,10 @@ class UserDetailView(generic.DetailView):
     template_name = 'Tapp/userInfo.html'
     contest_object_name = 'usr'
 
-
-
 class CourseDetailView(generic.DetailView): # 接受名为pk的参数 查找相应对象 会返回HTTP404
     model = Course
     template_name = "Tapp/course_detail.html"
     contest_object_name = "course"
-
-
 
 class SelectDetailView(generic.DetailView):
     model = SelectQuestion
