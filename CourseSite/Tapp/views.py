@@ -53,6 +53,8 @@ class CoursesView(generic.ListView):
     # def http_method_not_allowed(self, request):
     #     return HttpResponseNotAllowed(permitted_methods="POST GET")
 
+
+
 # def courses(request): # 课程索引
 #     try:
 #         stu = Student.objects.get(stu_id=request.POST['usr_count'])
@@ -71,6 +73,7 @@ class CourseDetailView(generic.DetailView): # 接受名为pk的参数 查找相�
     model = Course
     template_name = "Tapp/course_detail.html"
     contest_object_name = "course"
+
 
 # def course_detail(request,c_id): # 依主码来找
 #     c = get_object_or_404(Course,pk=c_id) # 快捷函数 得到对象 或抛出404
