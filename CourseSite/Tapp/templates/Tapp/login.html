@@ -1,0 +1,19 @@
+<head>
+    <title>登录</title>
+</head>
+<body>
+    <p><a href="{% url 'Tapp:rigister' %} ">去注册</a></p>
+    <form action="{% url 'Tapp:midLogin' %}" method="POST">
+        {% csrf_token %}
+        <fieldset>
+            <label for="usr_count">ID</label>
+            <input type="text" maxlength="30" id="usr_count" name="usr_count" required>
+        </fieldset>
+        <fieldset>
+            <label for="usr_pwd">密码</label>
+            <input maxlength="30" id="usr_pwd" type="password" name="usr_pwd" required>
+        </fieldset>
+        <button id="submit">登录</button>
+    </form>
+</body>
+<footer><small>&COPY;All Copyright about LHK</small></footer>

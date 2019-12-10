@@ -19,16 +19,15 @@ def register(request):
     return render(request,"Tapp/register.html")
 
 @require_POST
-def midRegisterView(request):
+def midRegisterView(request): # 处理注册的中间层 只能由内部POST访问
     try:
         stu_name = request.POST['usr_name']
         stu_id = request.POST['usr_id']
         pwd = request.POST['usr_pwd']
         cof = request.POST['usr_cof']
         if stu_name =="" or stu_id == "" or pwd != cof:
-            return HttpResponseRedirect(reverse('Tapp:course',args=()))
+            return HttpResponseRedirect(reverse('Tapp:register',args=()))
         Student.objects.create(stu_name=stu_name,stu_id=stu_id,stu_pwd=pwd)
-        # print("at db")
         return HttpResponseRedirect(reverse('Tapp:login',args=()))
     except Exception:
         return HttpResponseRedirect(reverse('Tapp:register',args=()))
@@ -39,7 +38,7 @@ def midLoginView(request): # 处理login的中间层 只能由内部POST访问
     try:
         stu = Student.objects.get(stu_id=request.POST['usr_count'])
         if stu.stu_pwd == request.POST['usr_pwd']:
-            return HttpResponseRedirect(reverse('Tapp:courses',args=()))
+            return HttpResponseRedirect(reverse('Tapp:userDetail',args=(stu.id)))
         return HttpResponseRedirect(reverse('Tapp:login',args=()))
     except Exception:
         return HttpResponseRedirect(reverse('Tapp:login',args=()))

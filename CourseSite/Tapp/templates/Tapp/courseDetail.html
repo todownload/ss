@@ -1,0 +1,18 @@
+<head>
+        <title>Course Detail</title>
+        {% load static %}
+        <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
+        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+</head>
+<body>
+    {% if course %}
+        <p>name : {{ course.course_name }}</p>
+        <p>teacher: {{ course.teacher.teacher_name }}</p>
+        <p>student number: {{ course.course_stu_num }}</p>
+    {% else %}
+        <p>No such course</p>
+    {% endif %}
+</body>
+<footer>
+    <p><small>&COPY;All Copyright about LHk</small></p>
+</footer>

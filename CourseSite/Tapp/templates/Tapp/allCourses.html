@@ -1,0 +1,19 @@
+
+<head>
+    <title>Courses</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+</head>
+<body>
+    {% if all_courses %}
+        <ul>
+            {% for course in all_courses %}
+                <li><a href= " {% url 'Tapp:course_detail' course.id %} " >{{ course.course_name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No courses are available</p>
+    {% endif %}
+</body>
+
+<footer><small>&COPY;Copyright All about LHK</small></footer>
