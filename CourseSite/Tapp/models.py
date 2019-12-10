@@ -10,7 +10,6 @@ class Teacher(models.Model):
         return self.teacher_name
 
 class Student(models.Model):
-    Course = models.ManyToManyField(Course)
     stu_name = models.CharField(max_length=20) # 学生名字
     stu_id = models.CharField(max_length=15,unique=True) # 学生id 唯一
     stu_pwd = models.CharField(max_length=30) # 学生密码
