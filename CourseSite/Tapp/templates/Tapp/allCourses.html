@@ -8,7 +8,7 @@
     {% if all_courses %}
         <ul>
             {% for course in all_courses %}
-                <li><a href= " {% url 'Tapp:course_detail' course.id %} " >{{ course.course_name }}</a></li>
+                <li><a href= " {% url 'Tapp:courseDetail' course.id %} " >{{ course.course_name }}</a></li>
             {% endfor %}
         </ul>
     {% else %}

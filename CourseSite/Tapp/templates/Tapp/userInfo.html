@@ -1,21 +1,24 @@
 <head>
-        <title>Course Detail</title>
-        {% load static %}
-        <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <title>Course Detail</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
+    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 <body>
     {% if usr %}
-        <p>name : {{ usr.usr_name }}</p>
-        <p>ID: {{ usr.usr_id }}</p>
-        <p><a href="{ % url 'Tapp:courses' % }">All courses</a></p>
-        {% if usr.course_set.all()  %}
+        <p>name : {{ usr.stu_name }}</p>
+        <p>ID: {{ usr.stu_id }}</p>
+        <p><a href="{% url 'Tapp:courses' %}">所有课程</a></p>
         <p>已选课程</p>
+        {% if selected_courses  %}
         <ul>
-            {% for c in usr.course_set.all() %}
+            {% for c in selected_courses %}
                 <li><a href="{% url 'Tapp:courseDetail' c.id %} ">{{ c.course_name }}</a></li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p><small>未选择课程</small></p>
         {% endif %}
     {% else %}
         <p>No such user</p>

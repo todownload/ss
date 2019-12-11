@@ -1,8 +1,10 @@
 <head>
     <title>登录</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 <body>
-    <p><a href="{% url 'Tapp:rigister' %} ">去注册</a></p>
+    <p><a href="{% url 'Tapp:register' %} ">去注册</a></p>
     <form action="{% url 'Tapp:midLogin' %}" method="POST">
         {% csrf_token %}
         <fieldset>

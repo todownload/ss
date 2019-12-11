@@ -38,13 +38,13 @@ def midLoginView(request): # 处理login的中间层 只能由内部POST访问
     try:
         stu = Student.objects.get(stu_id=request.POST['usr_count'])
         if stu.stu_pwd == request.POST['usr_pwd']:
-            return HttpResponseRedirect(reverse('Tapp:userDetail',args=(stu.id)))
+            return HttpResponseRedirect(reverse('Tapp:userDetail',args=(stu.pk,)))
         return HttpResponseRedirect(reverse('Tapp:login',args=()))
     except Exception:
         return HttpResponseRedirect(reverse('Tapp:login',args=()))
 
 class CoursesView(generic.ListView):
-    template_name = "Tapp/courses.html"
+    template_name = "Tapp/allCourses.html"
     context_object_name = "all_courses"
     def get_queryset(self):
         """Return all courses"""
@@ -52,9 +52,6 @@ class CoursesView(generic.ListView):
     # def http_method_not_allowed(self, request):
     #     return HttpResponseNotAllowed(permitted_methods="POST GET")
 
-@require_POST
-def allCourse(request):
-    return CoursesView.as_view()
 
 # def courses(request): # 课程索引
 #     try:
@@ -70,6 +67,16 @@ def allCourse(request):
 #         context = {"all_courses":all_courses} # 创建上下文对象
 #         return render(request,"Tapp/courses.html",context) # 渲染模板
 
+def userDetail(request,pk):
+    try:
+        stu = Student.objects.get(pk=pk)
+        selected_courses = stu.course_set.all()
+        context = {"usr":stu,"selected_courses":selected_courses}
+        return render(request,'Tapp/userInfo.html',context)
+    except Exception:
+        return Http404("No such usr")
+
+
 class UserDetailView(generic.DetailView):
     model = Student
     template_name = 'Tapp/userInfo.html'
@@ -77,7 +84,7 @@ class UserDetailView(generic.DetailView):
 
 class CourseDetailView(generic.DetailView): # 接受名为pk的参数 查找相应对象 会返回HTTP404
     model = Course
-    template_name = "Tapp/course_detail.html"
+    template_name = "Tapp/courseDetail.html"
     contest_object_name = "course"
 
 class SelectDetailView(generic.DetailView):
