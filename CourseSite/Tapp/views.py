@@ -67,7 +67,7 @@ class CoursesView(generic.ListView):
 #         context = {"all_courses":all_courses} # 创建上下文对象
 #         return render(request,"Tapp/courses.html",context) # 渲染模板
 
-def userDetail(request,pk):
+def userDetail(request,pk): # 用户信息
     try:
         stu = Student.objects.get(pk=pk)
         selected_courses = stu.course_set.all()
@@ -77,7 +77,7 @@ def userDetail(request,pk):
         return Http404("No such user")
 
 
-def courseDetail(request,pk):
+def courseDetail(request,pk): # 课程信息
     try:
         course = Course.objects.get(pk=pk) # 课程
         announcements = course.announcement_set.all() # 所有公告
@@ -98,7 +98,7 @@ def courseDetail(request,pk):
     except Exception:
         return Http404("No such course")
 
-def knowledgeDetail(request,pk):
+def knowledgeDetail(request,pk): # 知识点信息
     try:
         knowledge = Knowledge.objects.get(pk=pk)
         selectSet = knowledge.selectquestion_set.all()
@@ -114,7 +114,7 @@ def knowledgeDetail(request,pk):
     except Exception:
         return Http404("No such knowledge")
 
-def Announcements(request,pk):
+def Announcements(request,pk): # 公告
     try:
         course = Course.objects.get(pk=pk)
         announcements = course.announcement_set.all().reverse() # 所有公告
@@ -134,8 +134,8 @@ class SelectDetailView(generic.DetailView):
     pass
 
 
-
-def handleSelect(request,pk):
+@require_POST
+def handleSelect(request,pk): # 处理选择题
     try:
         select = SelectQuestion.objects.get(pk=pk)
     except Exception:
@@ -160,10 +160,43 @@ class DrawDetailView(generic.DetailView):
     template_name = 'Tapp/drawDetail.html'
     context_object_name = 'draw'
 
+@require_POST
+def handleDraw(request,pk): # 处理绘图题
+    try:
+        draw = DrawQuestion.objects.get(pk=pk)
+    except Exception:
+        return HttpResponse("No such draw question")
+    try:
+        asw = request.POST['asw']
+    except Exception:
+        return HttpResponse("Submit no answer")
+    try:
+        content = f"<p>{asw}</p>"
+        return HttpResponse(content=content)
+    except Exception:
+        return HttpResponse("Unknown Error")
+
 class DesignDetailView(generic.DetailView):
     model = DesignQuestion
     template_name = 'Tapp/designDetail.html'
     context_object_name = 'design'
+
+
+@require_POST
+def handleDesign(request,pk): # 处理设计题
+    try:
+        design = DesignQuestion.objects.get(pk=pk)
+    except Exception:
+        return HttpResponse("No such design question")
+    try:
+        asw = request.POST['code']
+    except Exception:
+        return HttpResponse("Submit no answer")
+    try:
+        content = f"<p>{asw}</p>"
+        return HttpResponse(content=content)
+    except Exception:
+        return HttpResponse("Unknown Error")
 
 
 

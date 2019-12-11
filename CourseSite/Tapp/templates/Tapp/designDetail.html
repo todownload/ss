@@ -5,3 +5,36 @@
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
     <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
+
+
+<body>
+
+    {% if design %}
+    <div>
+        <p>Knowledge {{ design.knowledge.course.course_name }} -- {{ design.knowledge.knowledge_name }} </p>
+        <p>Question: {{ design.question_text }}</p>
+        <fieldset>
+            <p>Required Language: {{ design.question_language }} </p>
+            <p>Example Input: {{ design.example_input }} </p>
+            <p>Example Output: {{ design.example_output }} </p>
+        </fieldset>
+        <form action="{% url 'Tapp:handleDesign' design.id %}" method="POST" >
+            {% csrf_token %}
+            <fieldset>
+                <label for="code"></label>
+                <textarea name="code" id="code" cols="80" rows="20"></textarea>
+            </fieldset>
+            <fieldset>
+                <p class="row">
+                    <input type="submit" value="提交" class="submit" id="submit_name" />
+                </p>
+            </fieldset>
+        </form>
+    </div>
+    {% else %}
+    <p>No such design question</p>
+    {% endif %}
+</body>
+<footer>
+    <p><small>&COPY;All Copyright about LHk</small></p>
+</footer>

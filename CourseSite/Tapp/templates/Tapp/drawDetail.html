@@ -5,3 +5,33 @@
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
     <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
+
+<body>
+    {% if draw %}
+    <div>
+        <p>Knowledge {{ draw.knowledge.course.course_name }} -- {{ draw.knowledge.knowledge_name }} </p>
+        <p>Question: {{ draw.question_text }}</p>
+        <fieldset>
+            <p>Required Language: {{ draw.question_language }} </p>
+        </fieldset>
+        <form action="{% url 'Tapp:handleDraw' draw.id %}" method="POST" >
+            {% csrf_token %}
+            <fieldset>
+                <label for="asw"></label>
+                <textarea name="asw" id="asw" cols="80" rows="20"></textarea>
+            </fieldset>
+            <fieldset>
+                <p class="row">
+                    <input type="submit" value="提交" class="submit" id="submit_name" />
+                </p>
+            </fieldset>
+        </form>
+    </div>
+    {% else %}
+    <p>No such draw question</p>
+    {% endif %}
+</body>
+
+<footer>
+    <p><small>&COPY;All Copyright about LHk</small></p>
+</footer>

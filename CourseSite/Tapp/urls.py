@@ -11,10 +11,12 @@ urlpatterns = [
     path('courses/',views.CoursesView.as_view(),name='courses'),
     path('courses/<int:pk>/',views.courseDetail,name='courseDetail'),
     path('usr/<int:pk>/',views.userDetail,name="userDetail"),
-    path('course/<int:pk>/announcements',views.Announcements,name='announcements'),
-    path('knowledges/<int:pk>',views.knowledgeDetail, name="knowledgeDetail"),
+    path('course/<int:pk>/announcements/',views.Announcements,name='announcements'),
+    path('knowledges/<int:pk>/',views.knowledgeDetail, name="knowledgeDetail"),
     path('courses/select/<int:pk>/',views.SelectDetailView.as_view(),name="selectDetail"),
-    path('course/select/<int:pk>/res',views.handleSelect,name="handleSelect"),
+    path('course/select/<int:pk>/res/',views.handleSelect,name="handleSelect"),
     path('courses/draw/<int:pk>/',views.DrawDetailView.as_view(),name="drawDetail"),
-    path('courses/design/<int:pk>/',views.DesignDetailView.as_view(),name="designDetail")
+    path('courses/draw/<int:pk>/res/',views.handleDraw,name="handleDraw"),
+    path('courses/design/<int:pk>/',views.DesignDetailView.as_view(),name="designDetail"),
+    path('course/design/<int:pk>/res/',views.handleDesign,name="handleDesign")
 ]
