@@ -1,0 +1,54 @@
+<head>
+    <title>Knowledge Detail</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
+    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+</head>
+<body>
+    {% if knowledge %}
+    <p>Course Name: {{ knowledge.course.course_name }}</p>
+    <p>knowledge Name: {{ knowledge.knowledge_name }}</p>
+    <fieldset>
+        <p>Select Questions</p>
+        {% if selectSet %}
+        <ul>
+            {% for select in selectSet %}
+            <li><a href="{% url 'Tapp:selectDetail' select.id %} "> {{ select.question_text }} </a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No Select Question</p>
+        {% endif %}
+    </fieldset>
+    <fieldset>
+        <p>Draw Questions</p>
+        {% if drawSet %}
+        <ul>
+            {% for draw in drawSet %}
+            <li><a href="{% url 'Tapp:drawDetail' draw.id %} "> {{ draw.question_text }} </a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No Draw Question</p>
+        {% endif %}
+    </fieldset>
+    <fieldset>
+        <p>Design Questions</p>
+        {% if designSet %}
+        <ul>
+            {% for design in designSet %}
+            <li><a href="{% url 'Tapp:designDetail' design.id %} "> {{ design.question_text }} </a></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No Design Question</p>
+        {% endif %}
+    </fieldset>
+    {% else %}
+        <p>No such Knowledge</p>
+    {% endif %}
+</body>
+<footer>
+    <p><small>&COPY;All Copyright about LHk</small></p>
+</footer>

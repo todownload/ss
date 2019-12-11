@@ -32,7 +32,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
     fields = ['course','anno_pubtime','anno_title','anno_content']
 
 
-
+admin.site.register(Knowledge)
 admin.site.register(Teacher,TeacherAdmin)
 admin.site.register(Course,CourseAdmin)
 admin.site.register(Announcement,AnnouncementAdmin)

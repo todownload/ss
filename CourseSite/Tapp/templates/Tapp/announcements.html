@@ -1,0 +1,26 @@
+<head>
+        <title>Announcement Detail</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+        <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
+        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+</head>
+<body>
+    {% if announcements %}
+    <p>Course name: {{ course_name }} </p>
+    <div>
+        {% for announcement in announcements %}
+            <fieldset class='announcement'>
+                <p>title: {{ announcement.anno_title }}</p>
+                <p>publish time: {{ announcement.anno_pubtime }} </p>
+                <p>Contents: {{ announcement.anno_content }} </p>
+            </fieldset>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p>No announcements</p>
+    {% endif %}
+</body>
+<footer>
+    <p><small>&COPY;All Copyright about LHk</small></p>
+</footer>

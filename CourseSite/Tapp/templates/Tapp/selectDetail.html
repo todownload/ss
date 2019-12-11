@@ -5,3 +5,43 @@
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
     <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
+
+<body>
+    {% if select %}
+    <div>
+        <p>Knowledge {{ select.knowledge.course.course_name }} -- {{ select.knowledge.knowledge_name }} </p>
+        <p>Question: {{ select.question_text }}</p>
+        <form action="{% url 'Tapp:handleSelect' select.id %}" method="POST">
+            {% csrf_token %}
+            <fieldset class='radio'>
+                <p class=row>
+                    <input type="radio" id="AnswerA" name="question" value="A" />
+                    <label for="AnswerA">A {{select.choice_A}}</label>
+                </p>
+                <p class=row>
+                    <input type="radio" id="AnswerB" name="question" value="B" />
+                    <label for="AnswerB">B {{select.choice_B}}</label>
+                </p>
+                <p class=row>
+                    <input type="radio" id="AnswerC" name="question" value="C" />
+                    <label for="AnswerC">C {{select.choice_C}}</label>
+                </p>
+                <p class=row>
+                    <input type="radio" id="AnswerD" name="question" value="D" />
+                    <label for="AnswerD">D {{select.choice_D}}</label>
+                </p>
+            </fieldset>
+            <fieldset>
+                <p class="row">
+                    <input type="submit" value="提交" class="submit" id="submit_name" />
+                </p>
+            </fieldset>
+        </form>
+    </div>
+    {% else %}
+    <p>No such question</p>
+    {% endif %}
+</body>
+<footer>
+    <p><small>&COPY;All Copyright about LHk</small></p>
+</footer>

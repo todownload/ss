@@ -74,34 +74,96 @@ def userDetail(request,pk):
         context = {"usr":stu,"selected_courses":selected_courses}
         return render(request,'Tapp/userInfo.html',context)
     except Exception:
-        return Http404("No such usr")
+        return Http404("No such user")
 
 
-class UserDetailView(generic.DetailView):
-    model = Student
-    template_name = 'Tapp/userInfo.html'
-    contest_object_name = 'usr'
+def courseDetail(request,pk):
+    try:
+        course = Course.objects.get(pk=pk) # 课程
+        announcements = course.announcement_set.all() # 所有公告
+        if announcements:
+            announcement = announcements.reverse()[0]
+        else:
+            announcement = None
+    # except Exception: # 用于断点调试
+    #     return HttpResponse("No such course")
+    # try:
+        knowledges = course.knowledge_set.all() # 知识点
+        context = {
+            "course":course,
+            "announcement":announcement,
+            "knowledges":knowledges
+        }
+        return render(request,'Tapp/courseDetail.html',context)
+    except Exception:
+        return Http404("No such course")
 
-class CourseDetailView(generic.DetailView): # 接受名为pk的参数 查找相应对象 会返回HTTP404
-    model = Course
-    template_name = "Tapp/courseDetail.html"
-    contest_object_name = "course"
+def knowledgeDetail(request,pk):
+    try:
+        knowledge = Knowledge.objects.get(pk=pk)
+        selectSet = knowledge.selectquestion_set.all()
+        drawSet = knowledge.drawquestion_set.all()
+        designSet = knowledge.designquestion_set.all()
+        context = {
+            "knowledge":knowledge,
+            "selectSet":selectSet,
+            "drawSet":drawSet,
+            "designSet":designSet
+        }
+        return render(request,'Tapp/knowledgeDetail.html',context)
+    except Exception:
+        return Http404("No such knowledge")
+
+def Announcements(request,pk):
+    try:
+        course = Course.objects.get(pk=pk)
+        announcements = course.announcement_set.all().reverse() # 所有公告
+        context = {
+            "course_name":course.course_name,
+            "announcements":announcements
+        }
+        return render(request,'Tapp/announcements.html',context)
+    except Exception:
+        return Http404("No such course")
+
 
 class SelectDetailView(generic.DetailView):
     model = SelectQuestion
     template_name = "Tapp/selectDetail.html"
-    contest_object_name = 'select'
+    context_object_name = 'select'
     pass
+
+
+
+def handleSelect(request,pk):
+    try:
+        select = SelectQuestion.objects.get(pk=pk)
+    except Exception:
+        return HttpResponse("No such select question")
+    try:
+        asw = request.POST['question']
+    except Exception:
+        return HttpResponse("Submit no answer")
+    try:
+        select.total_submit +=1
+        select.save()
+        if (select.answer==asw):
+            select.correct_submit +=1
+            select.save()
+            return HttpResponse("You are right")
+        return HttpResponse("wrong answer")
+    except Exception:
+        return HttpResponse("Unknown Error")
 
 class DrawDetailView(generic.DetailView):
     model = DrawQuestion
     template_name = 'Tapp/drawDetail.html'
-    contest_object_name = 'draw'
+    context_object_name = 'draw'
 
 class DesignDetailView(generic.DetailView):
     model = DesignQuestion
     template_name = 'Tapp/designDetail.html'
-    contest_object_name = 'design'
+    context_object_name = 'design'
 
 
 

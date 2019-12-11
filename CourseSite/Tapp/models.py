@@ -41,9 +41,9 @@ class Announcement(models.Model): # 公告
 
 class Knowledge(models.Model):
     course = models.ForeignKey(Course,on_delete=models.CASCADE)
-    knowledge_name = models.CharField(max_length=30,unique=True)
+    knowledge_name = models.CharField(max_length=30)
     def __str__(self):
-        return f'{self.Knowledge_name}'
+        return f'{self.course.course_name}--{self.knowledge_name}'
 
 class SelectQuestion(models.Model): # 选择题
     knowledge = models.ForeignKey(Knowledge,on_delete=models.CASCADE) # 对应知识
@@ -62,7 +62,7 @@ class SelectQuestion(models.Model): # 选择题
 class DesignQuestion(models.Model): # 程序设计题
     knowledge = models.ForeignKey(Knowledge,on_delete=models.CASCADE) # 对应知识
     question_text = models.CharField(max_length=200) # 问题描述
-    question_language = models.CharField(max_length=30) # 需要的语言
+    question_language = models.CharField(max_length=30,choices=[('C','C language'),('C++','C plus plus'),('Python','Python'),('Verilog','Verilog')]) # 需要的语言
     total_submit = models.IntegerField(default=0) # 总提交人数
     correct_submit = models.IntegerField(default=0) # 正确人数
     example_input = models.CharField(max_length=100) # 示例输入

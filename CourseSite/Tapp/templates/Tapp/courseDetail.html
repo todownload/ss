@@ -1,15 +1,40 @@
 <head>
-        <title>Course Detail</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
-        <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <title>Course Detail</title>
+    {% load static %}
+    <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
+    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 <body>
     {% if course %}
+    <fieldset>
         <p>name : {{ course.course_name }}</p>
         <p>teacher: {{ course.teacher.teacher_name }}</p>
         <p>student number: {{ course.course_stu_num }}</p>
+    </fieldset>
+        {% if announcement %}
+        <fieldset>
+            <p>latest announcement</p>
+            <p>title: {{ announcement.anno_title }}</p>
+            <p>publish time: {{ announcement.anno_pubtime }} </p>
+            <p>Contents: {{ announcement.anno_content }} </p>
+        </fieldset>
+        {% else %}
+        <fieldset>
+            <p>No announcement</p>
+        </fieldset>
+        {% endif %}
+        {% if knowledges %}
+        <div>
+            <p>Knowledges</p>
+            <ul>
+                {% for knowledge in knowledges %}
+                    <li><a href=" {% url 'Tapp:knowledgeDetail' knowledge.id %} ">knowledge name: {{knowledge.knowledge_name}} </a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+            <p>No knowledge</p>
+        {% endif %}
     {% else %}
         <p>No such course</p>
     {% endif %}
