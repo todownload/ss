@@ -1,33 +1,53 @@
-<!DOCTYPE html>
-<html >
 <head>
     <title>注册</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
     <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/js/bootstrap.js' %}">
 </head>
 <body>
-    <p><a href="{% url 'Tapp:login' %}">去登陆</a></p>
-    <form action="{% url 'Tapp:midRegister' %}" method="POST">
-        {% csrf_token %}
-        <fieldset>
-            <label for="usr_count">名字</label>
-            <input type="text" maxlength="30" id="usr_name" name="usr_name" required>
-        </fieldset>
-        <fieldset>
-                <label for="usr_count">ID</label>
-                <input type="text" maxlength="30" id="usr_id" name="usr_id" required>
-            </fieldset>
-        <fieldset>
-            <label for="usr_pwd">密码</label>
-            <input maxlength="30" id="usr_pwd" name='usr_pwd' type="password" required>
-        </fieldset>
-        <fieldset>
-            <label for="">确认密码</label>
-            <input maxlength="30" id="usr_cof" name="usr_cof" type="password" required>
-        </fieldset>
-        <button id="submit" >注册</button>
-    </form>
+    <div class="container">
+        <p class="lead"><a href="{% url 'Tapp:login' %}">去登陆</a></p>
+        <form action="{% url 'Tapp:midRegister' %}" method="POST" class="form-horizontal">
+            {% csrf_token %}
+            <div class="control-group">
+                <label for="usr_count" class="control-label" >名字</label>
+                <div class="controls">
+                    <input type="text" maxlength="30" id="usr_name" name="usr_name" required>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="usr_count"class="control-label">ID</label>
+                <div class="controls">
+                    <input type="text" maxlength="30" id="usr_id" name="usr_id" required>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="usr_pwd" class="control-label" >密码</label>
+                <div class="controls">
+                    <input maxlength="30" id="usr_pwd" name='usr_pwd' type="password" required>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="usr_cof" class="control-label" >确认密码</label>
+                <div class="controls">
+                    <input maxlength="30" id="usr_cof" name="usr_cof" type="password" required>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button id="submit" type="button" class="btn btn-info btn-large" >注册</button>
+            </div>
+
+        </form>
+
+
+    </div>
 </body>
-<footer><small>&COPY;Copyright All about LHK</small></footer>
-</html>
+<footer>
+    <div class="container">
+        <small>&COPY;Copyright All about LHK</small>
+    </div>
+</footer>

@@ -1,19 +1,17 @@
 <head>
     <title>Select Detail</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 
 <body>
+    <div class="container hero-unit">
     {% if select %}
-    <div>
-        <p>Knowledge {{ select.knowledge.course.course_name }} -- {{ select.knowledge.knowledge_name }} </p>
-        <p>Question: {{ select.question_text }}</p>
+        <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ select.question_text }}</span> </p>
         <form action="{% url 'Tapp:handleSelect' select.id %}" method="POST">
             {% csrf_token %}
-            <fieldset class='radio'>
+            <div class='radio'>
                 <p class=row>
                     <input type="radio" id="AnswerA" name="question" value="A" />
                     <label for="AnswerA">A {{select.choice_A}}</label>
@@ -30,18 +28,18 @@
                     <input type="radio" id="AnswerD" name="question" value="D" />
                     <label for="AnswerD">D {{select.choice_D}}</label>
                 </p>
-            </fieldset>
-            <fieldset>
-                <p class="row">
-                    <input type="submit" value="提交" class="submit" id="submit_name" />
-                </p>
-            </fieldset>
+            </div>
+            <div class="form-actions">
+                <button class="btn-info btn-default">提交</button>
+            </div>
         </form>
     </div>
     {% else %}
-    <p>No such question</p>
+    <p class="lead">No such question</p>
     {% endif %}
 </body>
 <footer>
-    <p><small>&COPY;All Copyright about LHk</small></p>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
 </footer>

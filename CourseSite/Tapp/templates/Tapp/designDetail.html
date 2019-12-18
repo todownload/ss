@@ -1,40 +1,36 @@
+
 <head>
-    <title>Design Detail</title>
+    <title>Draw Detail</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 
-
 <body>
-
+    <div class="container hero-unit">
     {% if design %}
-    <div>
-        <p>Knowledge {{ design.knowledge.course.course_name }} -- {{ design.knowledge.knowledge_name }} </p>
-        <p>Question: {{ design.question_text }}</p>
-        <fieldset>
-            <p>Required Language: {{ design.question_language }} </p>
-            <p>Example Input: {{ design.example_input }} </p>
-            <p>Example Output: {{ design.example_output }} </p>
-        </fieldset>
+        <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ design.question_text }}</span> </p>
+        <p class="lead"><strong>要求的语言</strong> <br> <span class="text-info"> {{ design.question_language }}</span> </p>
+        <p class="lead"><strong>Example Input</strong><br>{{ design.example_input }} </p>
+        <p class="lead"><strong>Example Output</strong> <br> {{ design.example_output }} </p>
         <form action="{% url 'Tapp:handleDesign' design.id %}" method="POST" >
             {% csrf_token %}
-            <fieldset>
+            <div class="">
                 <label for="code"></label>
                 <textarea name="code" id="code" cols="80" rows="20"></textarea>
-            </fieldset>
-            <fieldset>
-                <p class="row">
-                    <input type="submit" value="提交" class="submit" id="submit_name" />
-                </p>
-            </fieldset>
+            </div>
+            <div class="form-actions">
+                <button class="btn-info">提交</button>
+            </div>
         </form>
-    </div>
     {% else %}
-    <p>No such design question</p>
+    <p class="lead">No such design question</p>
     {% endif %}
+    </div>
 </body>
+
 <footer>
-    <p><small>&COPY;All Copyright about LHk</small></p>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
 </footer>

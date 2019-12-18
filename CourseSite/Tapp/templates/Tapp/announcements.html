@@ -1,26 +1,29 @@
 <head>
         <title>Announcement Detail</title>
         {% load static %}
-        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
         <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-        <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 <body>
+    <div class="container">
     {% if announcements %}
-    <p>Course name: {{ course_name }} </p>
+    <p class="lead text-center text-info">{{ course_name }} 课程公告</p>
     <div>
         {% for announcement in announcements %}
-            <fieldset class='announcement'>
-                <p>title: {{ announcement.anno_title }}</p>
-                <p>publish time: {{ announcement.anno_pubtime }} </p>
-                <p>Contents: {{ announcement.anno_content }} </p>
-            </fieldset>
+            <div class='hero-unit'>
+                <p><strong>公告标题</strong> <span class="text-info"> {{ announcement.anno_title }}</span></p>
+                <p><strong>发布时间</strong> <span class="text-info"> {{ announcement.anno_pubtime }}</span> </p>
+                <p><strong>公告内容</strong><br> <span class="text-info"> {{ announcement.anno_content }}</span> </p>
+            </div>
         {% endfor %}
     </div>
     {% else %}
-        <p>No announcements</p>
+        <p class="lead"><strong>暂无公告</strong></p>
     {% endif %}
+    </div>
 </body>
 <footer>
-    <p><small>&COPY;All Copyright about LHk</small></p>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
 </footer>

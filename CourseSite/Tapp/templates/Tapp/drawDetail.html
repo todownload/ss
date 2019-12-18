@@ -1,37 +1,33 @@
 <head>
     <title>Draw Detail</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 
 <body>
+    <div class="container hero-unit">
     {% if draw %}
-    <div>
-        <p>Knowledge {{ draw.knowledge.course.course_name }} -- {{ draw.knowledge.knowledge_name }} </p>
-        <p>Question: {{ draw.question_text }}</p>
-        <fieldset>
-            <p>Required Language: {{ draw.question_language }} </p>
-        </fieldset>
+        <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ draw.question_text }}</span> </p>
+        <p class="lead"><strong>要求的语言</strong> <br> <span class="text-info"> {{ draw.question_language }}</span> </p>
         <form action="{% url 'Tapp:handleDraw' draw.id %}" method="POST" >
             {% csrf_token %}
-            <fieldset>
+            <div class="">
                 <label for="asw"></label>
                 <textarea name="asw" id="asw" cols="80" rows="20"></textarea>
-            </fieldset>
-            <fieldset>
-                <p class="row">
-                    <input type="submit" value="提交" class="submit" id="submit_name" />
-                </p>
-            </fieldset>
+            </div>
+            <div class="form-actions">
+                <button class="btn-info">提交</button>
+            </div>
         </form>
-    </div>
     {% else %}
-    <p>No such draw question</p>
+    <p class="lead">No such draw question</p>
     {% endif %}
+    </div>
 </body>
 
 <footer>
-    <p><small>&COPY;All Copyright about LHk</small></p>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
 </footer>

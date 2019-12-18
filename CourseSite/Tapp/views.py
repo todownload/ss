@@ -43,14 +43,44 @@ def midLoginView(request): # 处理login的中间层 只能由内部POST访问
     except Exception:
         return HttpResponseRedirect(reverse('Tapp:login',args=()))
 
-class CoursesView(generic.ListView):
-    template_name = "Tapp/allCourses.html"
-    context_object_name = "all_courses"
-    def get_queryset(self):
-        """Return all courses"""
-        return Course.objects.all()
+def Courses(request,spk):
+    try:
+        all_courses = Course.objects.all()
+        stu = Student.objects.get(pk=spk)
+        selectedCourses = stu.course_set.all()
+        context = {"all_courses":all_courses, "selectedCourses":selectedCourses, "stu":stu}
+        return render(request,"Tapp/allCourses.html",context=context)
+    except Exception:
+        return HttpResponse("<h2>Some error Happen</h2>")
+
     # def http_method_not_allowed(self, request):
     #     return HttpResponseNotAllowed(permitted_methods="POST GET")
+
+@require_POST
+def handleSelectCourse(request,spk,cpk):
+    try:
+        course = Course.objects.get(pk=cpk)
+        student = Student.objects.get(pk=spk)
+        student.course_set.add(course)
+        student.save()
+        course.course_stu_num += 1
+        course.save()
+        return HttpResponseRedirect(reverse("Tapp:courses",args=(spk,)))
+    except Exception:
+        return HttpResponseRedirect(reverse("Tapp:courses",args=(spk,)))
+
+@require_POST
+def handleExitCourse(request,spk,cpk):
+    try:
+        course = Course.objects.get(pk=cpk)
+        student = Student.objects.get(pk=spk)
+        student.course_set.remove(course)
+        student.save()
+        course.course_stu_num -= 1
+        course.save()
+        return HttpResponseRedirect(reverse("Tapp:courses",args=(spk,)))
+    except Exception:
+        return HttpResponseRedirect(reverse("Tapp:courses",args=(spk,)))
 
 
 # def courses(request): # 课程索引
@@ -150,10 +180,10 @@ def handleSelect(request,pk): # 处理选择题
         if (select.answer==asw):
             select.correct_submit +=1
             select.save()
-            return HttpResponse("You are right")
-        return HttpResponse("wrong answer")
+            return HttpResponse("<h2>You are right</h2>")
+        return HttpResponse("<h2>wrong answer</h2>")
     except Exception:
-        return HttpResponse("Unknown Error")
+        return HttpResponse("<h2>Unknown Error</h2>")
 
 class DrawDetailView(generic.DetailView):
     model = DrawQuestion

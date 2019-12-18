@@ -1,54 +1,58 @@
 <head>
     <title>Knowledge Detail</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
 </head>
 <body>
+    <div class="container">
     {% if knowledge %}
-    <p>Course Name: {{ knowledge.course.course_name }}</p>
-    <p>knowledge Name: {{ knowledge.knowledge_name }}</p>
-    <fieldset>
-        <p>Select Questions</p>
+    <div class="page-header">
+        <p class="lead text-center"><strong>{{ knowledge.course.course_name }} 课程 {{ knowledge.knowledge_name }} 知识点 题目</strong></p>
+    </div>
+    <div class="hero-unit">
+        <p class="lead text-center">选择题</p>
         {% if selectSet %}
-        <ul>
+        <ol>
             {% for select in selectSet %}
-            <li><a href="{% url 'Tapp:selectDetail' select.id %} "> {{ select.question_text }} </a></li>
+            <li><a href="{% url 'Tapp:selectDetail' select.id %}" class="text-info"> {{ select.question_text }} </a></li>
             {% endfor %}
-        </ul>
+        </ol>
         {% else %}
-            <p>No Select Question</p>
+            <p class="lead"><small>暂无选择题</small></p>
         {% endif %}
-    </fieldset>
-    <fieldset>
-        <p>Draw Questions</p>
+    </div>
+    <div class="hero-unit">
+        <p class="lead text-center">连线题</p>
         {% if drawSet %}
-        <ul>
+        <ol>
             {% for draw in drawSet %}
-            <li><a href="{% url 'Tapp:drawDetail' draw.id %} "> {{ draw.question_text }} </a></li>
+            <li><a href="{% url 'Tapp:drawDetail' draw.id %}" class="text-info"> {{ draw.question_text }} </a></li>
             {% endfor %}
-        </ul>
+        </ol>
         {% else %}
-            <p>No Draw Question</p>
+            <p class="lead"><small>暂无连线题</small></p>
         {% endif %}
-    </fieldset>
-    <fieldset>
-        <p>Design Questions</p>
+    </div>
+    <div class="hero-unit">
+        <p class="lead text-center">设计题</p>
         {% if designSet %}
-        <ul>
+        <ol>
             {% for design in designSet %}
-            <li><a href="{% url 'Tapp:designDetail' design.id %} "> {{ design.question_text }} </a></li>
+            <li><a href="{% url 'Tapp:designDetail' design.id %}" class="text-info"> {{ design.question_text }} </a></li>
             {% endfor %}
-        </ul>
+        </ol>
         {% else %}
-            <p>No Design Question</p>
+        <p class="lead"><small>暂无设计题</small></p>
         {% endif %}
-    </fieldset>
+    </div>
     {% else %}
-        <p>No such Knowledge</p>
+        <p class="lead">No such Knowledge</p>
     {% endif %}
+    </div>
 </body>
 <footer>
-    <p><small>&COPY;All Copyright about LHk</small></p>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
 </footer>

@@ -3,17 +3,55 @@
     <title>Courses</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
 </head>
 <body>
+    <div class="container">
+        <br>
     {% if all_courses %}
-        <ul>
-            {% for course in all_courses %}
-                <li><a href= " {% url 'Tapp:courseDetail' course.id %} " >{{ course.course_name }}</a></li>
-            {% endfor %}
-        </ul>
+    {% for course in all_courses %}
+        {% if course in selectedCourses  %}
+        <div class="row-fluid hero-unit" >
+            <form action="{% url 'Tapp:exitCourse' stu.id course.id %}" method="POST">
+                {% csrf_token %}
+                <div class="span3">
+                    <p class="lead">{{ course.course_name }} </p>
+                </div>
+                <div class="span3">
+                    <p class="text-info">课程教师  {{ course.teacher.teacher_name }} </p>
+                    <p class="text-info">选课人数  {{ course.course_stu_num }} </p>
+                </div>
+                <div class="span4">
+                    <button class="btn btn-danger"> 退选 </button>
+                </div>
+            </form>
+        </div>
+        {% else %}
+        <div class="row-fluid hero-unit"  >
+            <form action="{% url 'Tapp:selectCourse' stu.id course.id %}" method="POST">
+                {% csrf_token %}
+                <div class="span3">
+                    <p class="lead">{{ course.course_name }} </p>
+                </div>
+                <div class="span3">
+                    <p class="text-info">课程教师  {{ course.teacher.teacher_name }} </p>
+                    <p class="text-info">选课人数  {{ course.course_stu_num }} </p>
+                </div>
+                <div class="span4">
+                    <button class="btn btn-success"> 选课 </button>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    {% endfor %}
     {% else %}
-        <p>No courses are available</p>
+        <p class="lead"><strong>目前没有任何课程</strong></p>
     {% endif %}
+</div>
 </body>
 
-<footer><small>&COPY;Copyright All about LHK</small></footer>
+<footer>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
+</footer>

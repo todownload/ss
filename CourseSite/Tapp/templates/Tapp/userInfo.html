@@ -1,16 +1,21 @@
 <head>
     <title>User Info</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+
 </head>
 <body>
+    <div class="container-fluid">
+        <br>
     {% if usr %}
-        <p>name : {{ usr.stu_name }}</p>
-        <p>ID: {{ usr.stu_id }}</p>
-        <p><a href="{% url 'Tapp:courses' %}">所有课程</a></p>
-        <p>已选课程</p>
+    <div class="span4">
+        <p class="lead"><strong>用户基本信息</strong></p>
+        <p class="lead"><strong>名字</strong>  {{ usr.stu_name }}</p>
+        <p class="lead"><strong>ID</strong>  {{ usr.stu_id }}</p>
+    </div>
+    <div class="span4">
+        <p class="lead"><strong>已选课程</strong></p>
         {% if selected_courses  %}
         <ul>
             {% for c in selected_courses %}
@@ -18,12 +23,21 @@
             {% endfor %}
         </ul>
         {% else %}
-        <p><small>未选择课程</small></p>
+        <p class="lead"><small>未选择课程</small></p>
         {% endif %}
+    </div>
+    <div class="span4">
+        <p class="lead"><a href="{% url 'Tapp:courses' usr.pk %}">所有课程</a></p>
+    </div>
     {% else %}
-        <p>No such user</p>
+        <div class="span10">
+            <p class="lead"><strong>无此用户</strong></p>
+        </div>
     {% endif %}
+    </div>
 </body>
 <footer>
-    <p><small>&COPY;All Copyright about LHk</small></p>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
 </footer>

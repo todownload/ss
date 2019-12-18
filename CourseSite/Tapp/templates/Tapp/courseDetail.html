@@ -2,43 +2,49 @@
     <title>Course Detail</title>
     {% load static %}
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-    <link rel="stylesheet" href="{% static 'Tapp/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
 </head>
 <body>
+    <div class="container">
     {% if course %}
-    <fieldset>
-        <p>name : {{ course.course_name }}</p>
-        <p>teacher: {{ course.teacher.teacher_name }}</p>
-        <p>student number: {{ course.course_stu_num }}</p>
-    </fieldset>
+    <div class="hero-unit">
+        <p class="lead text-center"><strong>课程信息</strong></p>
+        <p class="text-info"><strong>课程名字</strong>  {{ course.course_name }}</p>
+        <p class="text-info"><strong>课程教师</strong>  {{ course.teacher.teacher_name }}</p>
+        <p class="text-info"><strong>选课学生数</strong>  {{ course.course_stu_num }}</p>
+    </div>
+    <div class="hero-unit">
         {% if announcement %}
         <fieldset>
-            <p>latest announcement</p>
-            <p>title: {{ announcement.anno_title }}</p>
-            <p>publish time: {{ announcement.anno_pubtime }} </p>
-            <p>Contents: {{ announcement.anno_content }} </p>
+            <p class="lead text-center"><strong>最新公告</strong></p>
+            <p><strong>公告标题</strong> {{ announcement.anno_title }}</p>
+            <p><strong>发布时间</strong>   {{ announcement.anno_pubtime }} </p>
+            <p><strong>公告内容</strong><br> {{ announcement.anno_content }} </p>
+            <p class="lead"><small><a href="{% url 'Tapp:announcements' course.id %}">全部公告</a></small></p>
         </fieldset>
         {% else %}
-        <fieldset>
-            <p>No announcement</p>
-        </fieldset>
+            <p class="lead"><small>暂无公告</small></p>
         {% endif %}
+    </div>
+    <div class="hero-unit">
         {% if knowledges %}
-        <div>
-            <p>Knowledges</p>
-            <ul>
+            <p class="lead text-center"><strong>课程知识点</strong></p>
+            <ol>
                 {% for knowledge in knowledges %}
-                    <li><a href=" {% url 'Tapp:knowledgeDetail' knowledge.id %} ">knowledge name: {{knowledge.knowledge_name}} </a></li>
+                    <li ><a href=" {% url 'Tapp:knowledgeDetail' knowledge.id %}" class="text-info">{{knowledge.knowledge_name}} </a></li>
                 {% endfor %}
-            </ul>
-        </div>
+            </ol>
         {% else %}
-            <p>No knowledge</p>
+            <p class="lead"><small>暂无知识点</small></p>
         {% endif %}
+    </div>
     {% else %}
-        <p>No such course</p>
+        <p>无此课程</p>
     {% endif %}
+    </div>
 </body>
 <footer>
-    <p><small>&COPY;All Copyright about LHk</small></p>
+    <div class="container">
+        <small>&COPY;All Copyright about LHK</small>
+    </div>
 </footer>
