@@ -2,11 +2,11 @@
     <title>注册</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
-    <link rel="stylesheet" href="{% static 'Tapp/js/bootstrap.js' %}">
+    <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
 </head>
 <body>
-    <div class="container">
-        <p class="lead"><a href="{% url 'Tapp:login' %}">去登陆</a></p>
+    <div class="container hero-unit">
+        <p class="lead"><a href="{% url 'Tapp:login' %}">去登录</a></p>
         <form action="{% url 'Tapp:midRegister' %}" method="POST" class="form-horizontal">
             {% csrf_token %}
             <div class="control-group">
