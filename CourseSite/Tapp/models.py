@@ -67,7 +67,9 @@ class DesignQuestion(models.Model): # 程序设计题
     correct_submit = models.IntegerField(default=0) # 正确人数
     example_input = models.CharField(max_length=100) # 示例输入
     example_output = models.CharField(max_length=100) # 示例输出
-    question_analysis = models.TextField(default="") # 问题解析
+    inputFile = models.FileField(default="Files/empty.json", upload_to="Files/") # 输入用例
+    outputFile = models.FileField(default="Files/empty.json", upload_to="Files/") # 输出结果
+    question_analysis = models.TextField(default="") # 正确代码 -- 用于比对
     def __str__(self):
         return self.question_text
 

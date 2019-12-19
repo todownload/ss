@@ -186,6 +186,8 @@ def handleSelect(request,pk): # 处理选择题
     except Exception:
         return HttpResponse("<h2>Unknown Error</h2>")
 
+
+
 class DrawDetailView(generic.DetailView):
     model = DrawQuestion
     template_name = 'Tapp/drawDetail.html'
@@ -207,11 +209,12 @@ def handleDraw(request,pk): # 处理绘图题
     except Exception:
         return HttpResponse("Unknown Error")
 
+
+
 class DesignDetailView(generic.DetailView):
     model = DesignQuestion
     template_name = 'Tapp/designDetail.html'
     context_object_name = 'design'
-
 
 @require_POST
 def handleDesign(request,pk): # 处理设计题
