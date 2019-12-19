@@ -7,6 +7,9 @@ from django.views.decorators.http import require_POST # 装饰器
 
 from .models import *
 
+import os
+from random import randint
+
 # Create your views here.
 
 def index(request):
@@ -227,8 +230,52 @@ def handleDesign(request,pk): # 处理设计题
     except Exception:
         return HttpResponse("Submit no answer")
     try:
-        content = f"<p>{asw}</p>"
-        return HttpResponse(content=content)
+        lang = design.question_language # 获取语言
+        postFix = { # 后缀字典
+            "C":"c",
+            "C++":"cpp",
+            "Python":"py",
+            "Verilog":"v"
+        }
+        fix = postFix[lang] # 获取后缀
+        randArray=""
+        for i in range(0,8):
+            randArray += str(randint(0,9))
+        fileN = str(pk)+randArray
+        fileName = str(pk)+randArray+"."+fix
+        filePath = "Files/"+fileName
+        with open(filePath,'w') as fw:
+            fw.write(asw)
+        commands = {
+            "C":"gcc -o "+fileN+" "+filePath+" ; ./"+fileN+"< Files/empty.json > Files/"+fileN+".txt",
+            "C++":"g++ -o "+fileN+" "+filePath+" ; ./"+fileN+"< Files/empty.json > Files/"+fileN+".txt",
+            "Python":"python "+filePath+ "< Files/empty.json > Files/"+fileN+".txt",
+            "Verilog":"iverilog -o "+fileN+".vvp"+filePath+"; vvp "+fileN+".vvp < Files/empty.json  > Files/"+fileN+".txt"
+        }
+        cmd = commands[lang]
+        os.system(cmd)
+
+        x = open("Files/empty.json").readlines()
+        y = open("Files/"+fileN+".txt").readlines()
+        os.remove(filePath)
+        os.remove("Files/"+fileN+".txt" )
+        rx =[]
+        ry =[]
+        for line in x:
+            if len(line.strip())>0:
+                rx.append(line.strip())
+                # print(line.strip())
+        for line in y:
+            if len(line.strip())>0:
+                ry.append(line.strip())
+                # print(line.strip())
+        if len(rx)!=len(ry):
+            return HttpResponse("<h2>Wrong Answer</h2>")
+        l = len(rx)
+        for i in range(0,l):
+            if rx[i]!=ry[i]:
+                return HttpResponse("<h2>Wrong Answer</h2>")
+        return HttpResponse("<h2>Right</h2>")
     except Exception:
         return HttpResponse("Unknown Error")
 
