@@ -3,7 +3,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
-
 </head>
 <body>
     <div class="container-fluid">
@@ -17,11 +16,11 @@
     <div class="span4">
         <p class="lead"><strong>已选课程</strong></p>
         {% if selected_courses  %}
-        <ul>
+        <ol>
             {% for c in selected_courses %}
-                <li><a href="{% url 'Tapp:courseDetail' c.id %} ">{{ c.course_name }}</a></li>
+                <li class="lead text-info"><a href="{% url 'Tapp:courseDetail' c.id %} ">{{ c.course_name }}</a></li>
             {% endfor %}
-        </ul>
+        </ol>
         {% else %}
         <p class="lead"><small>未选择课程</small></p>
         {% endif %}

@@ -157,6 +157,7 @@ def Announcements(request,pk): # 公告
         return Http404("No such course")
 
 
+
 class SelectDetailView(generic.DetailView):
     model = SelectQuestion
     template_name = "Tapp/selectDetail.html"
