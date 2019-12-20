@@ -97,6 +97,7 @@ class DesignQuestionInline(admin.TabularInline):
         ("QuestionInfo",{
             "fields":(
                 "question_text",
+                "question_language",
                 "example_input",
                 "example_output",
                 "inputFile",

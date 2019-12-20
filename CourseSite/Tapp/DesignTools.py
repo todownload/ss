@@ -139,11 +139,6 @@ def compare(outputPath:str, aswPath:str):
 
 
 
-def main():
-    print("This is just a tools file")
-
-if __name__ == "__main__":
-    main()
 
 
 

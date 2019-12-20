@@ -13,6 +13,7 @@
         <p class="lead"><strong>要求的语言</strong> <br> <span class="text-info"> {{ design.question_language }}</span> </p>
         <p class="lead"><strong>Example Input</strong><br>{{ design.example_input }} </p>
         <p class="lead"><strong>Example Output</strong> <br> {{ design.example_output }} </p>
+        <p class="lead"><strong>注意</strong> 以文件形式IO 注意格式 </p>
         <form action="{% url 'Tapp:handleDesign' design.id %}" method="POST" >
             {% csrf_token %}
             <div class="">
