@@ -8,6 +8,7 @@
 <body>
     <div class="container hero-unit">
     {% if draw %}
+        <p class="lead text-center"><strong class="text-info">{{ draw.question_title }}</strong> </p>
         <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ draw.question_text }}</span> </p>
         <p class="lead"><strong>要求的语言</strong> <br> <span class="text-info"> {{ draw.question_language }}</span> </p>
         <form action="{% url 'Tapp:handleDraw' draw.id %}" method="POST" >

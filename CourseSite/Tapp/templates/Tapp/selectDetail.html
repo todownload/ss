@@ -8,29 +8,30 @@
 <body>
     <div class="container hero-unit">
     {% if select %}
+        <p class="lead text-center"><strong class="text-info">{{ select.question_title }}</strong> </p>
         <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ select.question_text }}</span> </p>
         <form action="{% url 'Tapp:handleSelect' select.id %}" method="POST">
             {% csrf_token %}
             <div class='radio'>
-                <p class=row>
+                <p class="lead">
                     <input type="radio" id="AnswerA" name="question" value="A" />
                     <label for="AnswerA">A {{select.choice_A}}</label>
                 </p>
-                <p class=row>
+                <p class="lead">
                     <input type="radio" id="AnswerB" name="question" value="B" />
                     <label for="AnswerB">B {{select.choice_B}}</label>
                 </p>
-                <p class=row>
+                <p class="lead">
                     <input type="radio" id="AnswerC" name="question" value="C" />
                     <label for="AnswerC">C {{select.choice_C}}</label>
                 </p>
-                <p class=row>
+                <p class="lead">
                     <input type="radio" id="AnswerD" name="question" value="D" />
                     <label for="AnswerD">D {{select.choice_D}}</label>
                 </p>
             </div>
             <div class="form-actions">
-                <button class="btn-info btn-default">提交</button>
+                <button class="btn-info btn-large">提交</button>
             </div>
         </form>
     </div>

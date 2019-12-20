@@ -47,6 +47,22 @@ response="""
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
     filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     }
+    .btn-danger {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #da4f49;
+    *background-color: #bd362f;
+    background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+    background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+    background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+    background-repeat: repeat-x;
+    border-color: #bd362f #bd362f #802420;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    }
     </style>
     """
 
@@ -200,17 +216,17 @@ def handleSelect(request,pk): # 处理选择题
     try:
         asw = request.POST['question']
     except Exception:
-        return HttpResponse("Submit no answer")
+        return HttpResponse(response+"<h2 class='btn-warning>'Submit no answer</h2>")
     try:
         select.total_submit +=1
         select.save()
         if (select.answer==asw):
             select.correct_submit +=1
             select.save()
-            return HttpResponse("<h2>You are right</h2>")
-        return HttpResponse("<h2>wrong answer</h2>")
+            return HttpResponse(response+"<h2 class='btn-success'>You are right</h2>")
+        return HttpResponse(response+"<h2 class='btn-danger'>wrong answer</h2>")
     except Exception:
-        return HttpResponse("<h2>Unknown Error</h2>")
+        return HttpResponse(response+"<h2 class='btn-warning'>Unknown Error</h2>")
 
 
 
@@ -251,47 +267,7 @@ def DesignDetail(request,pk):
 
 @require_POST
 def handleDesign(request,pk): # 处理设计题
-    response="""
-    <head>
-    <title>Asw</title>
-    <link rel="shortcut icon" href="/Tapp/static/Tapp/images/favicon.ico" type="image/x-icon">
-    </head>
-    <style>
-    .btn-success {
-    color: #ffffff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    background-color: #5bb75b;
-    *background-color: #51a351;
-    background-image: -moz-linear-gradient(top, #62c462, #51a351);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
-    background-image: -webkit-linear-gradient(top, #62c462, #51a351);
-    background-image: -o-linear-gradient(top, #62c462, #51a351);
-    background-image: linear-gradient(to bottom, #62c462, #51a351);
-    background-repeat: repeat-x;
-    border-color: #51a351 #51a351 #387038;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-    }
 
-    .btn-warning {
-    color: #ffffff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-    background-color: #faa732;
-    *background-color: #f89406;
-    background-image: -moz-linear-gradient(top, #fbb450, #f89406);
-    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
-    background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
-    background-image: -o-linear-gradient(top, #fbb450, #f89406);
-    background-image: linear-gradient(to bottom, #fbb450, #f89406);
-    background-repeat: repeat-x;
-    border-color: #f89406 #f89406 #ad6704;
-    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
-    }
-    </style>
-    """
     try:
         design = DesignQuestion.objects.get(pk=pk)
     except Exception:
@@ -322,7 +298,7 @@ def handleDesign(request,pk): # 处理设计题
                 if cmd:
                     os.system(cmd)
                     if not (compare(directory+fileN+".txt",tmpOutput)):
-                        return HttpResponse(response+"<h2 class='btn-warning'>Wrong Answer</h2>")
+                        return HttpResponse(response+"<h2 class='btn-danger'>Wrong Answer</h2>")
                 else:
                     break
             else:
@@ -480,11 +456,11 @@ def compare(outputPath:str, aswPath:str):
     for line in x:
         if len(line.strip())>0:
             rx.append(line.strip())
-            print(line.strip())
+            # print(line.strip())
     for line in y:
         if len(line.strip())>0:
             ry.append(line.strip())
-            print(line.strip())
+            # print(line.strip())
     if len(rx)!=len(ry): # 先比行数
         return False
     l = len(rx)

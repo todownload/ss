@@ -10,6 +10,7 @@
 <body>
     <div class="container hero-unit">
     {% if design %}
+        <p class="lead text-center"><strong class="text-info">{{ design.question_title }}</strong> </p>
         <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ design.question_text }}</span> </p>
         <p class="lead"><strong>要求的语言</strong> <br> <span class="text-info"> {{ design.question_language }}</span> </p>
         <p class="lead"><strong>Example Input</strong><br>{{ design.example_input }} </p>
@@ -22,7 +23,7 @@
                 <textarea name="code" id="code" cols="80" rows="20"></textarea>
             </div>
             <div class="form-actions">
-                <button class="btn-info">提交</button>
+                <button class="btn-info btn-large">提交</button>
             </div>
         </form>
         <script src='{% static "Tapp/codemirror/lib/codemirror.js" %}'></script>
@@ -33,6 +34,7 @@
             var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
                 lineNumbers: true,
                 mode:"{{ textType }}",
+
             });
             $(".CodeMirror-scroll").hover(function(){
                 $(this).get(0).style.cursor = "text";

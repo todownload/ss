@@ -57,6 +57,7 @@ class SelectQuestionInline(admin.TabularInline):
         }),
         ("QuestionIfo",{
             'fields':(
+                "question_title",
                 "question_text",
                 "answer",
                 "choice_A",
@@ -79,6 +80,7 @@ class DrawQuestionInline(admin.TabularInline):
         }),
         ("QuestionInfo",{
             "fields":(
+                "question_title",
                 "question_text",
             )
         }),
@@ -96,6 +98,7 @@ class DesignQuestionInline(admin.TabularInline):
         }),
         ("QuestionInfo",{
             "fields":(
+                "question_title",
                 "question_text",
                 "question_language",
                 "example_input",

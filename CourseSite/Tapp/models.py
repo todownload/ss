@@ -47,6 +47,7 @@ class Knowledge(models.Model):
 
 class SelectQuestion(models.Model): # 选择题
     knowledge = models.ForeignKey(Knowledge,on_delete=models.CASCADE) # 对应知识
+    question_title = models.CharField(max_length=20,default="Question")
     question_text = models.CharField(max_length=200) # 问题描述
     total_submit = models.IntegerField(default=0) # 总提交人数
     correct_submit = models.IntegerField(default=0) # 正确人数
@@ -57,10 +58,11 @@ class SelectQuestion(models.Model): # 选择题
     choice_D = models.CharField(max_length=100) # 选项D
     question_analysis = models.TextField(default="no") # 问题解析
     def __str__(self):
-        return self.question_text
+        return self.question_title
 
 class DesignQuestion(models.Model): # 程序设计题
     knowledge = models.ForeignKey(Knowledge,on_delete=models.CASCADE) # 对应知识
+    question_title = models.CharField(max_length=20,default="Question")
     question_text = models.CharField(max_length=200) # 问题描述
     question_language = models.CharField(max_length=30,choices=[('C','C language'),('C++','C plus plus'),('Python','Python'),('Verilog','Verilog')]) # 需要的语言
     total_submit = models.IntegerField(default=0) # 总提交人数
@@ -71,13 +73,14 @@ class DesignQuestion(models.Model): # 程序设计题
     outputFile = models.FileField(default="Files/empty.json", upload_to="Files/") # 输出结果
     question_analysis = models.TextField(default="no") # 正确代码 -- 用于比对
     def __str__(self):
-        return self.question_text
+        return self.question_title
 
 class DrawQuestion(models.Model):
     knowledge = models.ForeignKey(Knowledge,on_delete=models.CASCADE) # 对应知识
+    question_title = models.CharField(max_length=20,default="Question")
     question_text = models.CharField(max_length=200) # 问题描述
     total_submit = models.IntegerField(default=0) # 总提交人数
     correct_submit = models.IntegerField(default=0) # 正确人数
     def __str__(self):
-        return self.question_text
+        return self.question_title
 
