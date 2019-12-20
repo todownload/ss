@@ -19,6 +19,6 @@ urlpatterns = [
     path('course/select/<int:pk>/res/',views.handleSelect,name="handleSelect"),
     path('courses/draw/<int:pk>/',views.DrawDetailView.as_view(),name="drawDetail"),
     path('courses/draw/<int:pk>/res/',views.handleDraw,name="handleDraw"),
-    path('courses/design/<int:pk>/',views.DesignDetailView.as_view(),name="designDetail"),
+    path('courses/design/<int:pk>/',views.DesignDetail ,name="designDetail"),
     path('course/design/<int:pk>/res/',views.handleDesign,name="handleDesign")
 ]

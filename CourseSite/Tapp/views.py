@@ -8,7 +8,47 @@ from django.views.decorators.http import require_POST # 装饰器
 from .models import *
 
 import os
+response="""
+    <head>
+    <title>Asw</title>
+    <link rel="shortcut icon" href="/Tapp/static/Tapp/images/favicon.ico" type="image/x-icon">
+    </head>
+    <style>
+    .btn-success {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #5bb75b;
+    *background-color: #51a351;
+    background-image: -moz-linear-gradient(top, #62c462, #51a351);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+    background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+    background-image: -o-linear-gradient(top, #62c462, #51a351);
+    background-image: linear-gradient(to bottom, #62c462, #51a351);
+    background-repeat: repeat-x;
+    border-color: #51a351 #51a351 #387038;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    }
 
+    .btn-warning {
+    color: #ffffff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    background-color: #faa732;
+    *background-color: #f89406;
+    background-image: -moz-linear-gradient(top, #fbb450, #f89406);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
+    background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
+    background-image: -o-linear-gradient(top, #fbb450, #f89406);
+    background-image: linear-gradient(to bottom, #fbb450, #f89406);
+    background-repeat: repeat-x;
+    border-color: #f89406 #f89406 #ad6704;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
+    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
+    }
+    </style>
+    """
 
 # Create your views here.
 
@@ -196,11 +236,18 @@ def handleDraw(request,pk): # 处理绘图题
         return HttpResponse("Unknown Error")
 
 
+def DesignDetail(request,pk):
+    try:
+        design = DesignQuestion.objects.get(pk=pk)
+        codetype = getTextType(design.question_language)
+        context = {
+            "design":design,
+            "textType":codetype
+        }
+        return render(request,"Tapp/designDetail.html",context)
+    except Exception:
+        return HttpResponse("<h1>No such design question<h1>")
 
-class DesignDetailView(generic.DetailView):
-    model = DesignQuestion
-    template_name = 'Tapp/designDetail.html'
-    context_object_name = 'design'
 
 @require_POST
 def handleDesign(request,pk): # 处理设计题
@@ -312,11 +359,21 @@ suffix = { # 语言对应文件后缀
     'Verilog':'.v'
 }
 
+textType = { # 语言对应模式
+    "C":"text/x-csrc",
+    "C++":"text/x-c++src",
+    "Python":"text/x-python",
+    "Verilog":"x-verilog"
+}
+
 def getSuffix(lang:str):
     if lang in list(suffix.keys()):
         return suffix[lang]
     else:
         return suffix['Python']
+
+def getTextType(lang:str):
+    return textType[lang]
 
 def getFileN(pk:int): # 产生随机的临时文件名 避免冲突
     fileN = str(pk)

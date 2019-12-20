@@ -3,6 +3,7 @@
     <title>Design Detail</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
+    <link rel="stylesheet" href='{% static "Tapp/codemirror/lib/codemirror.css" %}'>
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
 </head>
 
@@ -17,13 +18,26 @@
         <form action="{% url 'Tapp:handleDesign' design.id %}" method="POST" >
             {% csrf_token %}
             <div class="">
-                <label for="code"></label>
+                <label for="code">{{ design.question_language }}</label>
                 <textarea name="code" id="code" cols="80" rows="20"></textarea>
             </div>
             <div class="form-actions">
                 <button class="btn-info">提交</button>
             </div>
         </form>
+        <script src='{% static "Tapp/codemirror/lib/codemirror.js" %}'></script>
+        <script src='{% static "Tapp/codemirror/mode/clike/clike.js" %}'></script>
+        <script src='{% static "Tapp/codemirror/mode/python/python.js" %}'></script>
+        <script src='{% static "Tapp/codemirror/mode/verilog/verilog.js" %}'></script>
+        <script>
+            var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+                lineNumbers: true,
+                mode:"{{ textType }}",
+            });
+            $(".CodeMirror-scroll").hover(function(){
+                $(this).get(0).style.cursor = "text";
+            });
+        </script>
     {% else %}
     <p class="lead">No such design question</p>
     {% endif %}
