@@ -298,7 +298,12 @@ def handleDesign(request,pk): # 处理设计题
                 if cmd:
                     os.system(cmd)
                     if not (compare(directory+fileN+".txt",tmpOutput)):
-                        return HttpResponse(response+"<h2 class='btn-danger'>Wrong Answer</h2>")
+                        testCase = open(tmpInput,'r').readlines()
+                        reason = "<h3>在此用例下出错</h3>"
+                        for line in testCase:
+                            tmp = "<p>"+line+"</p><br>"
+                            reason+=tmp
+                        return HttpResponse(response+"<h2 class='btn-danger'>Wrong Answer</h2>"+reason)
                 else:
                     break
             else:
@@ -307,12 +312,7 @@ def handleDesign(request,pk): # 处理设计题
         design.save()
         return HttpResponse(response+"<h2 class='btn-success' >Right</h2>")
     except Exception:
-        testCase = open(tmpInput,'r').readlines()
-        reason = "<h3>在此用例下出错</h3><br>"
-        for line in testCase:
-            tmp = "<p>"+line+"</p><br>"
-            reason+=tmp
-        return HttpResponse(response+"<h2 class='btn-warning'>Unknown Error</h2>"+reason)
+        return HttpResponse(response+"<h2 class='btn-warning'>Unknown Error</h2>")
     finally:
         os.remove(filePath)
         os.remove("Files/"+fileN+".txt" )
