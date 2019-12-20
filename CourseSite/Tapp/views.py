@@ -8,7 +8,8 @@ from django.views.decorators.http import require_POST # 装饰器
 from .models import *
 
 import os
-from random import randint
+
+import DesignTools
 
 # Create your views here.
 
@@ -213,49 +214,24 @@ def handleDesign(request,pk): # 处理设计题
     except Exception:
         return HttpResponse("Submit no answer")
     try:
-        lang = design.question_language # 获取语言
-        postFix = { # 后缀字典
-            "C":"c",
-            "C++":"cpp",
-            "Python":"py",
-            "Verilog":"v"
-        }
-        fix = postFix[lang] # 获取后缀
-        randArray=""
-        for i in range(0,8):
-            randArray += str(randint(0,9))
-        fileN = str(pk)+randArray
-        fileName = str(pk)+randArray+"."+fix
-        filePath = "Files/"+fileName
-        with open(filePath,'w') as fw:
+        lang = design.question_language # 语言
+        fileN = DesignTools.getFileN(pk) # 随机文件名
+        fix = DesignTools.getSuffix(lang) # 文件后缀
+        directory = "Files/" # 储存目录
+        inputPath = design.inputFile.path # 输入文件
+        aswPath = design.outputFile.path # 答案文件
+        filePath = directory+fileN+fix # 代码文件
+        with open(filePath,'w') as fw: # 写入代码
             fw.write(asw)
-        commands = {
-            "C":"gcc -o "+fileN+" "+filePath+" ; ./"+fileN+"< Files/empty.json > Files/"+fileN+".txt",
-            "C++":"g++ -o "+fileN+" "+filePath+" ; ./"+fileN+"< Files/empty.json > Files/"+fileN+".txt",
-            "Python":"python "+filePath+ "< Files/empty.json > Files/"+fileN+".txt",
-            "Verilog":"iverilog -o "+fileN+".vvp"+filePath+"; vvp "+fileN+".vvp < Files/empty.json  > Files/"+fileN+".txt"
-        }
-        cmd = commands[lang]
-        os.system(cmd)
-
-        x = open(design.inputFile.path).readlines()
-        y = open("Files/"+fileN+".txt").readlines()
-        rx =[]
-        ry =[]
-        for line in x:
-            if len(line.strip())>0:
-                rx.append(line.strip())
-                # print(line.strip())
-        for line in y:
-            if len(line.strip())>0:
-                ry.append(line.strip())
-                # print(line.strip())
-        if len(rx)!=len(ry):
-            return HttpResponse("<h2>Wrong Answer</h2>")
-        l = len(rx)
-        for i in range(0,l):
-            if rx[i]!=ry[i]:
-                return HttpResponse("<h2>Wrong Answer</h2>")
+        for i in range(1,11):
+            tmpInput,tmpOutput =  DesignTools.decodeFile(inputPath, aswPath, pk, i, directory)
+            cmd = DesignTools.getCommand(lang, fileN, filePath, tmpInput, directory)
+            if cmd:
+                os.system(cmd)
+                if not (DesignTools.compare(directory+fileN+".txt",tmpOutput)):
+                    return HttpResponse("<h2>Wrong Answer</h2>")
+            else:
+                break
         return HttpResponse("<h2>Right</h2>")
     except Exception:
         return HttpResponse("Unknown Error")
