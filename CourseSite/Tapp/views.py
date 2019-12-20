@@ -86,20 +86,6 @@ def handleExitCourse(request,spk,cpk):
         return HttpResponseRedirect(reverse("Tapp:courses",args=(spk,)))
 
 
-# def courses(request): # 课程索引
-#     try:
-#         stu = Student.objects.get(stu_id=request.POST['usr_count'])
-#     except Exception:
-#         # return Http404("Please login first!")
-#         # return HttpResponse("Please login first!") # 避免非用户通过查看源代码访问此页面
-#         return HttpResponseRedirect(reverse('Tapp:login',args=())) # 跳转回会登录页面
-#     else:
-#         all_courses = Course.objects.all()
-#         # outputs = '<br>'.join([c.course_name for c in all_courses])
-#         # return HttpResponse(content=outputs)
-#         context = {"all_courses":all_courses} # 创建上下文对象
-#         return render(request,"Tapp/courses.html",context) # 渲染模板
-
 def userDetail(request,pk): # 用户信息
     try:
         stu = Student.objects.get(pk=pk)
@@ -118,9 +104,6 @@ def courseDetail(request,pk): # 课程信息
             announcement = announcements.reverse()[0]
         else:
             announcement = None
-    # except Exception: # 用于断点调试
-    #     return HttpResponse("No such course")
-    # try:
         knowledges = course.knowledge_set.all() # 知识点
         context = {
             "course":course,
@@ -255,10 +238,8 @@ def handleDesign(request,pk): # 处理设计题
         cmd = commands[lang]
         os.system(cmd)
 
-        x = open("Files/empty.json").readlines()
+        x = open(design.inputFile.path).readlines()
         y = open("Files/"+fileN+".txt").readlines()
-        os.remove(filePath)
-        os.remove("Files/"+fileN+".txt" )
         rx =[]
         ry =[]
         for line in x:
@@ -278,6 +259,9 @@ def handleDesign(request,pk): # 处理设计题
         return HttpResponse("<h2>Right</h2>")
     except Exception:
         return HttpResponse("Unknown Error")
+    finally:
+        os.remove(filePath)
+        os.remove("Files/"+fileN+".txt" )
 
 
 

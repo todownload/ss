@@ -55,7 +55,7 @@ class SelectQuestion(models.Model): # 选择题
     choice_B = models.CharField(max_length=100) # 选项B
     choice_C = models.CharField(max_length=100) # 选项C
     choice_D = models.CharField(max_length=100) # 选项D
-    question_analysis = models.TextField(default="") # 问题解析
+    question_analysis = models.TextField(default="no") # 问题解析
     def __str__(self):
         return self.question_text
 
@@ -65,11 +65,11 @@ class DesignQuestion(models.Model): # 程序设计题
     question_language = models.CharField(max_length=30,choices=[('C','C language'),('C++','C plus plus'),('Python','Python'),('Verilog','Verilog')]) # 需要的语言
     total_submit = models.IntegerField(default=0) # 总提交人数
     correct_submit = models.IntegerField(default=0) # 正确人数
-    example_input = models.CharField(max_length=100) # 示例输入
-    example_output = models.CharField(max_length=100) # 示例输出
+    example_input = models.TextField(default="No") # 示例输入
+    example_output = models.TextField(default="No") # 示例输出
     inputFile = models.FileField(default="Files/empty.json", upload_to="Files/") # 输入用例
     outputFile = models.FileField(default="Files/empty.json", upload_to="Files/") # 输出结果
-    question_analysis = models.TextField(default="") # 正确代码 -- 用于比对
+    question_analysis = models.TextField(default="no") # 正确代码 -- 用于比对
     def __str__(self):
         return self.question_text
 
