@@ -3,6 +3,30 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
+    <style>
+        .and{
+            background-color: aqua;
+            background-image: url("{% static 'Tapp/images/ANDImg.PNG' %}");
+            width: 50px;
+            height: 30px;
+            border-bottom-left-radius: 200px;
+            border-bottom-right-radius: 200px;
+        }
+        .or{
+            background-color:brown;
+            width: 50px;
+            height: 30px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+        .not{
+            background-color: black;
+            width: 50px;
+            height: 30px;
+            border-bottom-left-radius: 100px;
+            border-bottom-right-radius: 100px;
+        }
+    </style>
 </head>
 
 <body>
@@ -17,7 +41,11 @@
 
     {% if not imagePath %}
     <div class="container">
-
+        <div>
+            <div class="and"></div>
+            <div class="or"></div>
+            <div class="not"></div>
+        </div>
     </div>
     {% else %}
     <div class="span12">
