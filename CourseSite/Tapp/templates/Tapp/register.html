@@ -10,14 +10,14 @@
         <form action="{% url 'Tapp:midRegister' %}" method="POST" class="form-horizontal">
             {% csrf_token %}
             <div class="control-group">
-                <label for="usr_count" class="control-label" >名字</label>
+                <label for="usr_name" class="control-label" >名字</label>
                 <div class="controls">
                     <input type="text" maxlength="30" id="usr_name" name="usr_name" required>
                 </div>
             </div>
 
             <div class="control-group">
-                <label for="usr_count"class="control-label">ID</label>
+                <label for="usr_id" class="control-label">ID</label>
                 <div class="controls">
                     <input type="text" maxlength="30" id="usr_id" name="usr_id" required>
                 </div>
@@ -38,12 +38,10 @@
             </div>
 
             <div class="form-actions">
-                <button id="submit" type="button" class="btn btn-info btn-large" >注册</button>
+                <button id="submit" class="btn btn-info btn-large" >注册</button>
             </div>
 
         </form>
-
-
     </div>
 </body>
 <footer>

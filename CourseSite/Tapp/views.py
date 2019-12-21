@@ -8,6 +8,7 @@ from django.views.decorators.http import require_POST # 装饰器
 from .models import *
 
 import os
+import time
 response="""
     <head>
     <title>Asw</title>
@@ -296,7 +297,15 @@ def handleDesign(request,pk): # 处理设计题
             if tmpInput and tmpOutput: # 如果还有测试用例且有结果
                 cmd = getCommand(lang, fileN, filePath, tmpInput, directory)
                 if cmd:
-                    os.system(cmd)
+                    try:
+                        start = time.time()
+                        res = os.system(cmd)
+                        end = time.time()
+                        print(res)
+                        if end-start > 2 or res != 0:
+                            raise Exception
+                    except Exception:
+                        return HttpResponse(response+"<h2 class='btn-danger'>Runtime Error/h2>")
                     if not (compare(directory+fileN+".txt",tmpOutput)):
                         testCase = open(tmpInput,'r').readlines()
                         reason = "<h3>在此用例下出错</h3>"
@@ -331,7 +340,6 @@ def handleDesign(request,pk): # 处理设计题
 """
 
 from random import randint
-import os
 
 suffix = { # 语言对应文件后缀
     'C':'.c',
