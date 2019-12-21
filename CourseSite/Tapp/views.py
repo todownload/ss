@@ -12,7 +12,7 @@ import time
 response="""
     <head>
     <title>Asw</title>
-    <link rel="shortcut icon" href="/Tapp/static/Tapp/images/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/static/Tapp/images/favicon.ico" type="image/x-icon">
     </head>
     <style>
     .btn-success {
@@ -216,6 +216,7 @@ def handleSelect(request,pk): # 处理选择题
         return HttpResponse("No such select question")
     try:
         asw = request.POST['question']
+        # print(asw)
     except Exception:
         return HttpResponse(response+"<h2 class='btn-warning>'Submit no answer</h2>")
     try:
@@ -230,27 +231,94 @@ def handleSelect(request,pk): # 处理选择题
         return HttpResponse(response+"<h2 class='btn-warning'>Unknown Error</h2>")
 
 
+def DrawDetail(request,pk):
+    try:
+        draw = DrawQuestion.objects.get(pk=pk) # 获取对象
+    except Exception:
+        return HttpResponse(response+"<h1 class='btn-warning'>No such draw question<h1>")
+    try:
+        inputLines,aswLines = decodeTableFile(draw.question_file.path) # decode文件
+        InputTH,InputTDList = decodeTable(inputLines) # 输入的表头和数据
+        aswTH,aswTDList = decodeTable(aswLines) # 答案部分的表头和数据
 
-class DrawDetailView(generic.DetailView):
-    model = DrawQuestion
-    template_name = 'Tapp/drawDetail.html'
-    context_object_name = 'draw'
+        countList = [ i+1 for i in range(0,len(aswTDList[0])) ] # 每一列
+        # 为了能保证每个input 有唯一的name
+        emptyList = []
+        for i in range(0,len(aswLines)):
+            tmpList = []
+            for j in range(0,len(aswTDList[0])):
+                tmp = j + i*len(aswTDList[0])
+                tmpList.append(tmp)
+            emptyList.append(tmpList)
+
+        # print(emptyList)
+        imagePath = "Tapp/images/Draw/"+draw.question_image.path.split("\\")[-1] # 图片文件路径
+
+        if draw.question_type == 0: # 作图题
+            context = {
+                "draw":draw,
+                "inputTH":InputTH,
+                "inputTDList":InputTDList,
+                "inputLines":inputLines,
+                "aswTH":aswTH,
+                "aswTDList":aswTDList,
+                "countList":countList,
+                "emptyList":emptyList, # 每行每列的值 用来给每个input 唯一的name
+            }
+        else: # 看图填表题
+            context = {
+                "draw":draw,
+                "inputTH":InputTH,
+                "inputTDList":InputTDList,
+                "aswTH":aswTH,
+                "aswTDList":aswTDList,
+                "imagePath":imagePath, # 图
+                "countList":countList,
+                "emptyList":emptyList, # 每行每列的值 用来给input 唯一的name
+            }
+    # except Exception:
+    #     return HttpResponse(response+"<h1 class='btn-warning'>Some thing wrong<h1>")
+        return render(request,"Tapp/drawDetail.html",context)
+    except Exception:
+        return HttpResponse(response+"<h1 class='btn-warning'>Some thing wrong<h1>")
 
 @require_POST
 def handleDraw(request,pk): # 处理绘图题
     try:
         draw = DrawQuestion.objects.get(pk=pk)
     except Exception:
-        return HttpResponse("No such draw question")
+        return HttpResponse(response+"<h1 class='btn-warning'>No such draw question<h1>")
     try:
-        asw = request.POST['asw']
+        draw.total_submit +=1 # 总提交次数加1
+        draw.save()
+        if draw.question_type == 0:
+            pass
+        else: # 处理填表题
+            inputLines,aswLines = decodeTableFile(draw.question_file.path) # decode文件
+            InputTH,InputTDList = decodeTable(inputLines) # 输入的表头和数据
+            aswTH,aswTDList = decodeTable(aswLines) # 答案部分的表头和数据
+            lineNum = len(aswTDList) # 行数
+            colNum = len(aswTDList[0]) # 列数
+            submitTable = []
+            for i in range(0,lineNum):
+                tmpList = []
+                for j in range(0,colNum):
+                    tmp = j + i*colNum
+                    val = request.POST[str(tmp)]
+                    tmpList.append(val)
+                submitTable.append(tmpList)
+            # print(submitTable)
+            res = compareTable(submitTable, aswTDList)
+            if res:
+                draw.correct_submit += 1
+                draw.save()
+                return HttpResponse(response+"<h2 class='btn-success' >Right</h2>")
+            else:
+                return HttpResponse(response+"<h2 class='btn-danger'>Wrong Answer</h2>")
+            # print(table)
     except Exception:
-        return HttpResponse("Submit no answer")
-    try:
-        content = f"<p>{asw}</p>"
-        return HttpResponse(content=content)
-    except Exception:
-        return HttpResponse("Unknown Error")
+        return HttpResponse(response+"<h2 class='btn-warning'>Unknown Error</h2>")
+
 
 
 def DesignDetail(request,pk):
@@ -268,7 +336,6 @@ def DesignDetail(request,pk):
 
 @require_POST
 def handleDesign(request,pk): # 处理设计题
-
     try:
         design = DesignQuestion.objects.get(pk=pk)
     except Exception:
@@ -336,7 +403,7 @@ def handleDesign(request,pk): # 处理设计题
 
 
 """
-这是一个为文件处理提供工具函数的部分
+这是一个为程序设计题处理提供工具函数的部分
 """
 
 from random import randint
@@ -482,6 +549,126 @@ def compare(outputPath:str, aswPath:str):
             return False
     return True
 
+
+"""
+这是为绘图题提供工具函数的部分
+"""
+
+def decodeTableFile(filePath:str):
+    """对真值表文件进行处理 得到表格
+
+    filePath -- 文件路径
+
+    return inputLines,outputLines
+
+    """
+    lines = open(filePath,'r').readlines() # 获取所有的行
+    inputLines = [] # 所有输入列
+    aswLines = [] # 所有非输入列
+    flag = 1 # 记录当前状态
+    l = len(lines) # 行数
+    for i in range(0,l):
+        if lines[i][0]=='=' and lines[i][1]=='=' and lines[i][2]=='=': # 遇到终止行
+            flag +=1
+        else:
+            line = lines[i]
+            tmp = line.strip().split()
+            tmpLine = []
+            numLine = False # 判断行类型
+            for item in tmp:
+                if item: # 添加非空元素
+                    if len(item)==1 and item>='0' and item<='1' : # 判断类型
+                        tmpLine.append(int(item))
+                    else:
+                        tmpLine.append(item)
+            if flag == 1:# 添加输入
+                inputLines.append(tmpLine)
+                pass
+            else:
+                aswLines.append(tmpLine)
+                pass
+    return inputLines,aswLines
+
+def compareTable(submitTable:list,aswTable:list):
+    """比较真值表结果
+
+    submitTable -- 提交的真值表
+
+    aswTable -- 答案真值表
+
+    return Bool
+    """
+    if len(submitTable) != len(aswTable): # 如果长度不一样
+        return False
+    l = len(submitTable)
+    for i in range(0,l):
+        tmp1 = submitTable[i]
+        tmp2 = aswTable[i]
+        tmpL = len(tmp2)
+        if len(tmp1)!=tmpL:# 某行的长度不一样
+            return False
+        for j in range(0,tmpL):# 某个值不一样
+            if tmp1[j]!=tmp2[j]:
+                return False
+    return True
+
+def decodeTable(Table:list):
+    """将表格分成表头和表值两部分
+
+    Table 表格
+
+    return TH,TDList
+    """
+    if Table and len(Table)>1: # 若是为真
+        head = []
+        data = []
+        for i in range(0,len(Table)):
+            head.append(Table[i][0])
+            data.append(Table[i][1:])
+        return head[:],data[:]
+    else:
+        return [],[]
+    pass
+
+
+def test():
+    """一个测试功能函数的测试函数
+    """
+
+    # Test decodeTableFile
+    # print(decodeTableFile("Files/empty.json")) #  --- Pass
+
+    # Test compareTable
+    aswTable = [
+        [1,1,1],
+        [0,0,1],
+        [0,1,0]
+    ]
+    rightTable = [
+        [1,1,1],
+        [0,0,1],
+        [0,1,0]
+    ]
+    wrongTable = [
+        [1,1,0],
+        [0,0,1],
+        [0,1,0]
+    ]
+    # print(compareTable(rightTable, aswTable))
+    # print(compareTable(wrongTable,aswTable))
+    # print(True)
+    # -- Pass
+
+    # Test decodeTable
+    inputLines,outputLines = decodeTableFile("Files/empty.json")
+    TH,TDList = decodeTable(inputLines)
+    print(TH)
+    print(TDList)
+    print(decodeTable(outputLines))
+    # -- pass
+
+
+    pass
 
 
 

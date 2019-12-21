@@ -82,6 +82,9 @@ class DrawQuestionInline(admin.TabularInline):
             "fields":(
                 "question_title",
                 "question_text",
+                "question_type",
+                "question_image",
+                "question_file"
             )
         }),
     )

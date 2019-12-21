@@ -79,6 +79,9 @@ class DrawQuestion(models.Model):
     knowledge = models.ForeignKey(Knowledge,on_delete=models.CASCADE) # 对应知识
     question_title = models.CharField(max_length=20,default="Question")
     question_text = models.CharField(max_length=200) # 问题描述
+    question_type = models.IntegerField(choices=[(0,'Draw Graph'),(1,'Fill Table')],default=0) # 问题类型
+    question_image = models.ImageField(default="Files/Img/green_bg.png",upload_to="Tapp/static/Tapp/images/Draw") # 图片文件
+    question_file = models.FileField(default="Files/empty.json", upload_to="Files/DrawInput/") # 真值表文件
     total_submit = models.IntegerField(default=0) # 总提交人数
     correct_submit = models.IntegerField(default=0) # 正确人数
     def __str__(self):
