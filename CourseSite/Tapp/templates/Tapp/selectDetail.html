@@ -8,7 +8,7 @@
 <body>
     <div class="container hero-unit">
     {% if select %}
-        <p class="lead text-center"><strong class="text-info">{{ select.question_title }}</strong> </p>
+        <p class="lead text-center pa"><strong class="text-info">{{ select.question_title }}</strong> </p>
         <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ select.question_text }}</span> </p>
         <form action="{% url 'Tapp:handleSelect' select.id %}" method="POST">
             {% csrf_token %}

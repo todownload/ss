@@ -8,24 +8,40 @@
 </head>
 
 <body>
-    <div class="container hero-unit">
+    <div class="container-fluid hero-unit">
     {% if design %}
-        <p class="lead text-center"><strong class="text-info">{{ design.question_title }}</strong> </p>
-        <p class="lead"><strong>问题描述</strong> <br> <span class="text-info">{{ design.question_text }}</span> </p>
-        <p class="lead"><strong>要求的语言</strong> <br> <span class="text-info"> {{ design.question_language }}</span> </p>
-        <p class="lead"><strong>Example Input</strong><br>{{ design.example_input }} </p>
-        <p class="lead"><strong>Example Output</strong> <br> {{ design.example_output }} </p>
-        <p class="lead"><strong>注意</strong> 以文件形式IO 注意格式 </p>
-        <form action="{% url 'Tapp:handleDesign' design.id %}" method="POST" >
-            {% csrf_token %}
-            <div class="">
-                <label for="code">{{ design.question_language }}</label>
-                <textarea name="code" id="code" cols="80" rows="20"></textarea>
+        <p class="lead text-center page-header"><strong class="text-info">{{ design.question_title }}</strong> </p>
+        <p class="lead"><strong>问题描述</strong> <pre> {{ design.question_text }} </pre></p>
+        <p class="lead"><strong>要求的语言</strong>  <span class="text-info"> {{ design.question_language }}</span> </p>
+
+        <div class="row-fluid">
+            <div class="span6">
+                <strong>Example Input</strong>
+                <br>
+                <pre>{{ design.example_input }}</pre>
             </div>
-            <div class="form-actions">
-                <button class="btn-info btn-large">提交</button>
+            <div class="span6">
+                <strong>Example Output</strong>
+                <br>
+                <pre>{{ design.example_output }}</pre>
             </div>
-        </form>
+        </div>
+        <div class="span12">
+            <strong>注意</strong> 以文件形式IO 注意格式
+        </div>
+
+        <div class="span12">
+            <form action="{% url 'Tapp:handleDesign' design.id %}" method="POST" >
+                {% csrf_token %}
+                <div class="">
+                    <label for="code">{{ design.question_language }}</label>
+                    <textarea name="code" id="code" cols="80" rows="20"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-info btn-large">提交</button>
+                </div>
+            </form>
+        </div>
         <script src='{% static "Tapp/codemirror/lib/codemirror.js" %}'></script>
         <script src='{% static "Tapp/codemirror/mode/clike/clike.js" %}'></script>
         <script src='{% static "Tapp/codemirror/mode/python/python.js" %}'></script>

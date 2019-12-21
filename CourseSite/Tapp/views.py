@@ -291,7 +291,7 @@ def handleDraw(request,pk): # 处理绘图题
     try:
         draw.total_submit +=1 # 总提交次数加1
         draw.save()
-        if draw.question_type == 0:
+        if draw.question_type == 0: # 处理画图题
             pass
         else: # 处理填表题
             inputLines,aswLines = decodeTableFile(draw.question_file.path) # decode文件
