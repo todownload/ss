@@ -368,7 +368,7 @@ def handleDesign(request,pk): # 处理设计题
                         start = time.time()
                         res = os.system(cmd)
                         end = time.time()
-                        print(res)
+                        # print(res)
                         if end-start > 2 or res != 0:
                             raise Exception
                     except Exception:
@@ -377,7 +377,7 @@ def handleDesign(request,pk): # 处理设计题
                         testCase = open(tmpInput,'r').readlines()
                         reason = "<h3>在此用例下出错</h3>"
                         for line in testCase:
-                            tmp = "<p>"+line+"</p><br>"
+                            tmp = "<pre>"+line+"</pre><br>"
                             reason+=tmp
                         return HttpResponse(response+"<h2 class='btn-danger'>Wrong Answer</h2>"+reason)
                 else:

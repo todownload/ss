@@ -6,7 +6,6 @@
     <style>
         .and{
             background-color: aqua;
-            background-image: url("{% static 'Tapp/images/AND.ico' %}" );
             width: 50px;
             height: 30px;
             border-bottom-left-radius: 200px;
@@ -26,6 +25,9 @@
             border-bottom-left-radius: 100px;
             border-bottom-right-radius: 100px;
         }
+        .canvas{
+            border: solid 2px;
+        }
     </style>
 </head>
 
@@ -41,10 +43,44 @@
 
     {% if not imagePath %}
     <div class="container">
-        <div>
-            <div class="and"></div>
-            <div class="or"></div>
-            <div class="not"></div>
+        <div class="row-fluid">
+            <div class="span4">
+                <label for="template_and" class="text-info">AND</label>
+                <div id="template_and" class="and"></div>
+            </div>
+
+            <div class="span4">
+                <label for="template_or"  class="text-info" >OR</label>
+                <div id="template_or" class="or" ></div>
+            </div>
+
+            <div class="span4">
+                <label for="template_not"  class="text-info">NOT</label>
+                <div id="template_not" class="not" ></div>
+            </div>
+
+        </div>
+        <div class="hero-unit">
+            <label for="canvas"><strong>画布</strong></label>
+            <canvas class="canvas" id="canvas" width="800" height="600">
+
+            </canvas>
+            <script type="text/javascript">
+                //获得画布元素
+                 var canvas1=document.getElementById("canvas");
+                 //获得2维绘图的上下文
+                 var ctx=canvas1.getContext("2d");
+                 //设置线宽
+                 ctx.lineWidth=10;
+                 //设置线的颜色
+                 ctx.strokeStyle="blue";
+                 //将画笔移动到00点
+                 ctx.moveTo(0,0);
+                 //画线到800，600的坐标
+                 ctx.lineTo(800,600);
+                 //执行画线
+                 ctx.stroke();
+             </script>
         </div>
     </div>
     {% else %}

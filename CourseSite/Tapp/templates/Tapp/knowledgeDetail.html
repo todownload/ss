@@ -5,12 +5,26 @@
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
 </head>
 <body>
-    <div class="container">
     {% if knowledge %}
+    <ul id="navbar" class="nav nav-tabs">
+        <li class="active">
+          <a href="#">顶部</a>
+        </li>
+        <li>
+            <a href="#select">选择题</a>
+        </li>
+        <li>
+            <a href="#draw">连线题</a>
+        </li>
+        <li>
+            <a href="#design">设计题</a>
+        </li>
+    </ul>
+    <div class="container">
     <div class="page-header">
-        <p class="lead text-center"><strong>{{ knowledge.course.course_name }} 课程 {{ knowledge.knowledge_name }} 知识点 题目</strong></p>
+        <p class="lead text-center"><strong>{{ knowledge.course.course_name }} 课程 {{ knowledge.knowledge_name }}  题目</strong></p>
     </div>
-    <div class="hero-unit">
+    <div id="select" class="hero-unit">
         <p class="lead text-center">选择题</p>
         {% if selectSet %}
         <ol>
@@ -22,7 +36,7 @@
             <p class="lead"><small>暂无选择题</small></p>
         {% endif %}
     </div>
-    <div class="hero-unit">
+    <div id="draw" class="hero-unit">
         <p class="lead text-center">连线题</p>
         {% if drawSet %}
         <ol>
@@ -34,7 +48,7 @@
             <p class="lead"><small>暂无连线题</small></p>
         {% endif %}
     </div>
-    <div class="hero-unit">
+    <div id="design" class="hero-unit">
         <p class="lead text-center">设计题</p>
         {% if designSet %}
         <ol>
