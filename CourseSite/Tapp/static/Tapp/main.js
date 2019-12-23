@@ -8,6 +8,10 @@ function addNode(parentId, nodeId, nodeLable, position) {
     .attr('id',nodeId).classed('node',true)
     .text(nodeLable);
 
+    //设置双击删除节点
+    // document.getElementById(nodeId).ondblclick=function(){
+    //   document.getElementById(nodeId).remove()
+    // }
   return jsPlumb.getSelector('#' + nodeId)[0];
 }
 
@@ -25,7 +29,7 @@ function addPorts(instance, node, ports, type) {
     var isSource = false, isTarget = false;
     if ( type === 'output' ) {
       anchor[0] = 1;
-      paintStyle.fillStyle = '#D4FFD6';
+      paintStyle.fillStyle = '#051bfa';
       isSource = true;
     } else {
       isTarget =true;
@@ -42,6 +46,7 @@ function addPorts(instance, node, ports, type) {
       isSource:isSource,
       isTarget:isTarget
     });
+
   }
 }
 
@@ -61,24 +66,6 @@ function connectPorts(instance, node1, port1, node2 , port2) {
   instance.connect({uuids:[uuid_source, uuid_target]});
 }
 
-function getTreeData() {
-  var tree = [
-    {
-      text: "Nodes",
-      nodes: [
-        {
-          text: "Node1",
-        },
-        {
-          text: "Node2"
-        }
-      ]
-    }
-  ]; 
-
-  return tree;
-}
-
 jsPlumb.ready(function() {
     console.log("jsPlumb is ready to use");
 
@@ -86,7 +73,7 @@ jsPlumb.ready(function() {
     var color = "#E8C870";
     var instance = jsPlumb.getInstance({
       // notice the 'curviness' argument to this Bezier curve.  the curves on this page are far smoother
-      // than the curves on the first demo, which use the default curviness value.      
+      // than the curves on the first demo, which use the default curviness value.
       Connector : [ "Bezier", { curviness:50 } ],
       DragOptions : { cursor: "pointer", zIndex:2000 },
       PaintStyle : { strokeStyle:color, lineWidth:2 },
@@ -96,19 +83,59 @@ jsPlumb.ready(function() {
       Container:"flow-panel"
     });
 
-    //Initialize Control Tree View
-    $('#control-panel').treeview({data: getTreeData()});
-    
-    //Handle drag and drop
-    $('.list-group-item').attr('draggable','true').on('dragstart', function(ev){
-      //ev.dataTransfer.setData("text", ev.target.id);
-      ev.originalEvent.dataTransfer.setData('text',ev.target.textContent);
-      console.log('drag start');
-    });
+    //产生坐标值 会在产生后增加 避免全覆盖
+    var dx = 180;
+    var dy = 180;
+
+    // 设置单击产生元件
+    document.getElementById("and").onclick=function(){
+      var uid = new Date().getTime();
+      var mx = ''+dx+'px';
+      var my = ''+dy+'px';
+      dx += 10;
+      dy += 10;
+      var node = addNode('flow-panel','node' + uid, "AND", {x:mx,y:my});
+      addPorts(instance, node, ['out1'],'output');
+      addPorts(instance, node, ['in1','in2'],'input')
+      instance.draggable($(node));
+    }
+    document.getElementById("or").onclick=function(){
+      var uid = new Date().getTime();
+      var mx = ''+dx+'px';
+      var my = ''+dy+'px';
+      dx += 10;
+      dy += 10;
+      var node = addNode('flow-panel','node' + uid, "OR", {x:mx,y:my});
+      addPorts(instance, node, ['out1'],'output');
+      addPorts(instance, node, ['in1','in2'],'input')
+      instance.draggable($(node));
+    }
+    document.getElementById("xor").onclick=function(){
+      var uid = new Date().getTime();
+      var mx = ''+dx+'px';
+      var my = ''+dy+'px';
+      dx += 10;
+      dy += 10;
+      var node = addNode('flow-panel','node' + uid, "XOR", {x:mx,y:my});
+      addPorts(instance, node, ['out1'],'output');
+      addPorts(instance, node, ['in1','in2'],'input')
+      instance.draggable($(node));
+    }
+    document.getElementById("not").onclick=function(){
+      var uid = new Date().getTime();
+      var mx = ''+dx+'px';
+      var my = ''+dy+'px';
+      dx += 10;
+      dy += 10;
+      var node = addNode('flow-panel','node' + uid, "NOT", {x:mx,y:my});
+      addPorts(instance, node, ['out1'],'output');
+      addPorts(instance, node, ['in1','in2'],'input')
+      instance.draggable($(node));
+    }
+
 
     $('#flow-panel').on('drop', function(ev){
-      
-      //avoid event conlict for jsPlumb
+      //avoid event conflict for jsPlumb
       if (ev.target.className.indexOf('_jsPlumb') >= 0 ) {
         return;
       }
@@ -118,18 +145,24 @@ jsPlumb.ready(function() {
       var my = '' + ev.originalEvent.offsetY + 'px';
 
       console.log('on drop : ' + ev.originalEvent.dataTransfer.getData('text'));
+      var text = ev.originalEvent.dataTransfer.getData('text');
       var uid = new Date().getTime();
-      var node = addNode('flow-panel','node' + uid, 'node', {x:mx,y:my});
-      addPorts(instance, node, ['out'],'output');
-      addPorts(instance, node, ['in1','in2'],'input');
+      var node = addNode('flow-panel','node' + uid, text, {x:mx,y:my});
+      if(text=="NOT"){
+        addPorts(instance, node, ['out'],'output');
+        addPorts(instance, node, ['in1'],'input');
+      }
+      else{
+        addPorts(instance, node, ['out'],'output');
+        addPorts(instance, node, ['in1'],'input');
+      }
       instance.draggable($(node));
     }).on('dragover', function(ev){
       ev.preventDefault();
       console.log('on drag over');
     });
-  
-    instance.doWhileSuspended(function() {
 
+    instance.doWhileSuspended(function() {
       // declare some common values:
       var arrowCommon = { foldback:0.8, fillStyle:color, width:5 },
       // use three-arg spec to create two different arrows with the common values:
@@ -138,18 +171,34 @@ jsPlumb.ready(function() {
         [ "Arrow", { location:0.2, direction:-1 }, arrowCommon ]
       ];
 
-      var node1 = addNode('flow-panel','node1', 'node1', {x:'80px',y:'20px'});
-      var node2 = addNode('flow-panel','node2', 'node2', {x:'280px',y:'20px'});
+      var inNum = parseInt(document.getElementById("inputNum").innerHTML);
+      var aswNum = parseInt(document.getElementById("aswNum").innerHTML);
+      var Ix = (document.getElementById("inputPortsList").value);
+      var Ay = (document.getElementById("aswPortsList").value);
+      var inPortList = Ix.split(' ')
+      var aswPortList = Ay.split(' ')
+      var dy = 20;
+      for (var i = 0; i<inNum;i++){
+        my = ''+dy+'px';
+        var node = addNode('flow-panel','nodeInput'+i,inPortList[i],{x:'0px',y:my});
+        dy += (parseInt(500/inNum));
+        addPorts(instance, node, ['out1'],'output');
+        //document.getElementById("nodeInput"+i).draggable = true
+      }
 
-      addPorts(instance, node1, ['out1','out2'],'output');
-      addPorts(instance, node2, ['in','in1','in2'],'input');
-
-      connectPorts(instance, node1, 'out2', node2, 'in');
+      dy = 20;
+      for (var i = 0; i<aswNum;i++){
+        my = ''+dy+'px';
+        var node = addNode('flow-panel','nodeOut'+i,aswPortList[i],{x:'700px',y:my});
+        dy += (parseInt(500/inNum));
+        addPorts(instance, node, ['in1'],'input');
+      }
 
       instance.draggable($('.node'));
-  
+
     });
 
     jsPlumb.fire("jsFlowLoaded", instance);
-    
+
 });
+

@@ -2,26 +2,35 @@
     <title>Draw Detail</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/bootstrap-treeview.min.css' %}">
+    <link rel="stylesheet" href="{% static 'Tapp/css/jsplumb.css' %}">
     <link rel="shortcut icon"  href="{% static 'Tapp/images/favicon.ico' %}" type="image/x-icon" >
     <style>
         .and{
             background-color: aqua;
-            width: 50px;
-            height: 30px;
+            width: 80px;
+            height: 50px;
             border-top-right-radius: 50px;
             border-bottom-right-radius: 50px;
         }
         .or{
-            background-color:brown;
-            width: 50px;
-            height: 30px;
+            background-color:azure;
+            width: 80px;
+            height: 50px;
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
         }
         .not{
-            background-color: black;
-            width: 50px;
-            height: 30px;
+            background-color:bisque;
+            width: 80px;
+            height: 50px;
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        .xor{
+            background-color:blanchedalmond;
+            width: 80px;
+            height: 50px;
             border-top-right-radius: 30px;
             border-bottom-right-radius: 30px;
         }
@@ -59,47 +68,56 @@
     </div>
 
     {% if not imagePath %}
-    <div class="container">
+    <input type="hidden" name="inputPortsList" id="inputPortsList" value="{{ inStr }}">
+    <input type="hidden" name="aswPortsList" id="aswPortsList" value="{{ aswStr }}">
         <div class="row-fluid">
-            <div class="span4">
-                <label for="template_and" class="text-info">AND</label>
-                <div id="template_and" class="and"></div>
+            <div class="span6">
+                <p class="lead">限定有且仅有如下<span id="inputNum">{{ inNum }}</span>个输入(填表时自上而下对应)</p>
+                <p class="text-info lead" id="inputPorts">
+                    {% for ITH in inputTH %}
+                        {{ ITH }}<span> </span>
+                    {% endfor %}
+                </p>
             </div>
-
-            <div class="span4">
-                <label for="template_or"  class="text-info" >OR</label>
-                <div id="template_or" class="or" ></div>
-            </div>
-
-            <div class="span4">
-                <label for="template_not"  class="text-info">NOT</label>
-                <div id="template_not" class="not" ></div>
+            <div class="span6">
+                <p class="lead">限定有且仅有如下<span id="aswNum">{{ aswNum }}</span>个输出(填表时自上而下对应)</p>
+                <p class="text-info lead" id="inputPorts">
+                    {% for OTH in aswTH %}
+                        {{ OTH }}
+                    {% endfor %}
+                </p>
             </div>
         </div>
-        <div class="hero-unit">
-            <label for="canvas"><strong>画布</strong></label>
-            <div class="canvas" id="canvas" width="800" height="600">
-                <div class="row-fluid">
-                    {% if inputTH  %}
-                    {% for ITH in inputTH %}
-                    <div class="span1">
-                        <label for="{{ITH}}">{{ITH}}</label>
-                        <div class="inPort" id="{{ITH}}" ></div>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-                    <div class="span6"></div>
-                    {% if aswTH %}
-                    {% for OTH in aswTH %}
-                        <div class="span1">
-                            <label for="{{OTH}}">{{OTH}}</label>
-                            <div class="outPort" id={{ITH}}></div>
-                        </div>
-                    {% endfor %}
-                    {% endif %}
+        <div class="row-fluid">
+            <div id="control-panel" class="span2" style="height: 500px;">
+                <p class="lead text-info">单击产生对应的电路单元</p>
+                <div class="and list-group-item" id="and">AND</div>
+                <div class="or list-group-item" id="or">OR</div>
+                <div class="not list-group-item" id="not">NOT</div>
+                <div class="xor list-group-item" id="xor">XOR</div>
+            </div>
+            <div id="place" class="span9" style="height: 500px;">
+                <p class="lead text-info">画板</p>
+                <div id="flow-panel"  style="position:absolute;height:100%;">
                 </div>
             </div>
+            <div id="preserve" class="span1">
+
+            </div>
         </div>
+
+        <script type='text/javascript'></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/jquery-1.11.1.min.js'  %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/jquery-ui-1.9.2.min.js'  %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/d3.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/bootstrap.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/bootstrap-treeview.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/json2.js' %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/jquery.jsPlumb-1.7.2.js' %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/biltong-0.2.js' %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/libs/jsBezier-0.6.js' %}"></script>
+        <script type="text/javascript" src="{% static 'Tapp/main.js' %}"></script>
+
         <div class="row-fluid">
             <div class="span12">
                 <p class="text-info lead text-center"><strong>请填写表格</strong> </p>

@@ -254,6 +254,15 @@ def DrawDetail(request,pk):
         # print(emptyList)
         imagePath = "Tapp/images/Draw/"+draw.question_image.path.split("\\")[-1] # 图片文件路径
 
+        inNum = len(InputTH) # 输入口数量
+        aswNum = len(aswTH) # 输出口数量
+        inStr = ""
+        aswStr = ""
+        for i in range(0,inNum):
+            inStr = inStr + InputTH[i] + " "
+        for i in range(0,aswNum):
+            aswStr = aswStr+aswTH[i]+" "
+
         if draw.question_type == 0: # 作图题
             context = {
                 "draw":draw,
@@ -263,6 +272,10 @@ def DrawDetail(request,pk):
                 "aswTH":aswTH,
                 "aswTDList":aswTDList,
                 "countList":countList,
+                "inNum":inNum,
+                "aswNum":aswNum,
+                "inStr":inStr,
+                "aswStr":aswStr,
                 "emptyList":emptyList, # 每行每列的值 用来给每个input 唯一的name
             }
         else: # 看图填表题
@@ -291,24 +304,34 @@ def handleDraw(request,pk): # 处理绘图题
     try:
         draw.total_submit +=1 # 总提交次数加1
         draw.save()
+        inputLines,aswLines = decodeTableFile(draw.question_file.path) # decode文件
+        InputTH,InputTDList = decodeTable(inputLines) # 输入的表头和数据
+        aswTH,aswTDList = decodeTable(aswLines) # 答案部分的表头和数据
+        lineNum = len(aswTDList) # 行数
+        colNum = len(aswTDList[0]) # 列数
+        submitTable = []
+        for i in range(0,lineNum):
+            tmpList = []
+            for j in range(0,colNum):
+                tmp = j + i*colNum
+                val = request.POST[str(tmp)]
+                tmpList.append(val)
+            submitTable.append(tmpList)
+        # print(submitTable)
         if draw.question_type == 0: # 处理画图题
-            pass
+            res = compareTableAll(submitTable, aswTDList)
+            print(submitTable)
+            print(aswTDList)
+            if res:
+                draw.correct_submit += 1
+                draw.save()
+                return HttpResponse(response+"<h2 class='btn-success' >Right</h2>")
+            else:
+                return HttpResponse(response+"<h2 class='btn-danger'>Wrong Answer</h2>")
         else: # 处理填表题
-            inputLines,aswLines = decodeTableFile(draw.question_file.path) # decode文件
-            InputTH,InputTDList = decodeTable(inputLines) # 输入的表头和数据
-            aswTH,aswTDList = decodeTable(aswLines) # 答案部分的表头和数据
-            lineNum = len(aswTDList) # 行数
-            colNum = len(aswTDList[0]) # 列数
-            submitTable = []
-            for i in range(0,lineNum):
-                tmpList = []
-                for j in range(0,colNum):
-                    tmp = j + i*colNum
-                    val = request.POST[str(tmp)]
-                    tmpList.append(val)
-                submitTable.append(tmpList)
-            # print(submitTable)
             res = compareTable(submitTable, aswTDList)
+            print(submitTable)
+            print(aswTDList)
             if res:
                 draw.correct_submit += 1
                 draw.save()
@@ -365,14 +388,12 @@ def handleDesign(request,pk): # 处理设计题
                 cmd = getCommand(lang, fileN, filePath, tmpInput, directory)
                 if cmd:
                     try:
-                        start = time.time()
                         res = os.system(cmd)
-                        end = time.time()
                         # print(res)
-                        if end-start > 2 or res != 0:
+                        if  res != 0:
                             raise Exception
                     except Exception:
-                        return HttpResponse(response+"<h2 class='btn-danger'>Runtime Error/h2>")
+                        return HttpResponse(response+"<h2> class='btn-danger'>Runtime Error</h2>")
                     if not (compare(directory+fileN+".txt",tmpOutput)):
                         testCase = open(tmpInput,'r').readlines()
                         reason = "<h3>在此用例下出错</h3>"
@@ -608,9 +629,46 @@ def compareTable(submitTable:list,aswTable:list):
         if len(tmp1)!=tmpL:# 某行的长度不一样
             return False
         for j in range(0,tmpL):# 某个值不一样
-            if tmp1[j]!=tmp2[j]:
+            if int(tmp1[j])!=int(tmp2[j]):
                 return False
     return True
+
+def compareTableAll(submitTable:list, aswTable:list):
+    """比较两个表是否相同 相同的行可能在不同的行
+
+    submitTable -- 提交的表
+
+    sawTable -- 答案表
+
+    比较方法 转化成字符串 排序 逐行比较
+    """
+    sub = []
+    asw = []
+    l = len(submitTable)
+    if len(aswTable) != l:
+        return False
+    for i in range(0,l): # 转化为字符串
+        tmp1 = submitTable[i]
+        tmp2 = aswTable[i]
+        tmpL = len(tmp1)
+        if len(tmp2)!= tmpL:
+            return False
+        tmpS1 = ""
+        tmpS2 = ""
+        for j in range(0,tmpL):
+            tmpS1 += str(tmp1[j])
+            tmpS2 += str(tmp2[j])
+        sub.append(tmpS1)
+        asw.append(tmpS2)
+    # 进行排序比较
+    sortedSub = sorted(sub)
+    sortedAsw = sorted(asw)
+    for i in range(0,l):
+        if sortedSub[i]!=sortedAsw[i]:
+            return False
+    return True
+
+
 
 def decodeTable(Table:list):
     """将表格分成表头和表值两部分
@@ -645,9 +703,9 @@ def test():
         [0,1,0]
     ]
     rightTable = [
+        [0,1,0],
         [1,1,1],
-        [0,0,1],
-        [0,1,0]
+        [0,0,1]
     ]
     wrongTable = [
         [1,1,0],
@@ -660,11 +718,16 @@ def test():
     # -- Pass
 
     # Test decodeTable
-    inputLines,outputLines = decodeTableFile("Files/empty.json")
-    TH,TDList = decodeTable(inputLines)
-    print(TH)
-    print(TDList)
-    print(decodeTable(outputLines))
+    # inputLines,outputLines = decodeTableFile("Files/empty.json")
+    # TH,TDList = decodeTable(inputLines)
+    # print(TH)
+    # print(TDList)
+    # print(decodeTable(outputLines))
+    # -- pass
+
+    # Test compareTableAll
+    # print(compareTableAll(rightTable,aswTable))
+    # print(compareTableAll(wrongTable,aswTable))
     # -- pass
 
 
